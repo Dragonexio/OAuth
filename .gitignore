@@ -1,0 +1,6 @@
+venv/
+*.token
+*.xml
+*.iml
+*.py[cod]
+.idea/
