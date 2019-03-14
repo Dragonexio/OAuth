@@ -16,9 +16,8 @@ var (
 
 func TestMain(m *testing.M) {
 	const (
-		appId = "appidgotfromdragonex"
-		//host      = "https://devoauth.dragonex.io"
-		host      = "http://127.0.0.1:9101"
+		appId     = "appidgotfromdragonex"
+		host      = "https://devoauth.dragonex.io"
 		accessKey = "accessKeyGotFromDragonEx"
 		secretKey = "secretKeyGotFromDragonEx"
 	)
@@ -140,6 +139,16 @@ func TestOAuthV1_ListOrders(t *testing.T) {
 		limit       int64 = 10
 	)
 	resp, _, err := apiV1.ListOrdersByDragonExUid(dragonExUid, coinCode, direction, startTime, endTime, offset, limit)
+
+	assert.Equal(t, nil, err)
+	assert.Equal(t, true, resp.Ok)
+}
+
+func TestOAuthV1_RedoPayCallback(t *testing.T) {
+	var (
+		tradeNo = ""
+	)
+	resp, _, err := apiV1.RedoPayCallback(tradeNo)
 
 	assert.Equal(t, nil, err)
 	assert.Equal(t, true, resp.Ok)

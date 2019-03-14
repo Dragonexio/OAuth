@@ -297,3 +297,27 @@ func (d *OAuthV1) ListOrdersByDragonExUid(dragonExUid int64, coinCode string, di
 	hResp, err = d.Do(req, r)
 	return
 }
+
+type RedoPayCallbackResponse struct {
+	BaseResponse
+	Data struct{}
+}
+
+func (d *OAuthV1) RedoPayCallback(tradeNo string) (r *RedoPayCallbackResponse, hResp *http.Response, err error) {
+	var (
+		path   = "/api/v1/pay/callback/redo/"
+		method = http.MethodPost
+		values = map[string]interface{}{
+			"trade_no": tradeNo,
+		}
+		headers = http.Header{}
+	)
+	req, err := d.NewRequest(method, path, values, headers)
+	if err != nil {
+		return
+	}
+
+	r = new(RedoPayCallbackResponse)
+	hResp, err = d.Do(req, r)
+	return
+}
