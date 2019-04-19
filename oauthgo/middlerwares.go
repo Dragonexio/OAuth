@@ -37,24 +37,3 @@ func CheckResponseMiddleware(oauth OAuth, req *http.Request, resp *http.Response
 
 	return nil
 }
-
-func DisplayRequestAndRespponseMiddleware(oauth OAuth, req *http.Request, resp *http.Response) (err error) {
-	reqBodyByte, err := ioutil.ReadAll(req.Body)
-	if err != nil {
-		return
-	}
-	req.Body = ioutil.NopCloser(bytes.NewBuffer(reqBodyByte))
-
-	fmt.Println(fmt.Sprintf("req.method = %+v", req.Method))
-	fmt.Println(fmt.Sprintf("req.url = %+v", req.URL.String()))
-	fmt.Println(fmt.Sprintf("req.body = %s", string(reqBodyByte)))
-
-	respBodyByte, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return
-	}
-	resp.Body = ioutil.NopCloser(bytes.NewBuffer(respBodyByte))
-
-	fmt.Println(fmt.Sprintf("resp.body = %s", string(respBodyByte)))
-	return
-}
