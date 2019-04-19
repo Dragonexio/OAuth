@@ -235,3 +235,7 @@ type BaseResponse struct {
 	Code int32  `json:"code"`
 	Msg  string `json:"msg"`
 }
+
+func (r *BaseResponse) IsOk() bool {
+	return r.Code == CodeOk
+}
