@@ -1,11 +1,8 @@
 package oauthgo
 
 import (
-	"bytes"
 	"fmt"
 	"github.com/stretchr/testify/assert"
-	"io/ioutil"
-	"net/http"
 	"testing"
 	"time"
 )
@@ -16,15 +13,17 @@ var (
 
 func TestMain(m *testing.M) {
 	const (
-		appId     = "appidgotfromdragonex"
-		host      = "https://devoauth.dragonex.io"
-		accessKey = "accessKeyGotFromDragonEx"
-		secretKey = "secretKeyGotFromDragonEx"
+		appId     = "appidfortest"
+		host      = "http://127.0.0.1:9101"
+		accessKey = "87079e4662685c40a884baa744f571b4"
+		secretKey = "a24d0648e60a5c7a9d250137c472d8f4"
+		checkKey  = "testKey"
 	)
 
-	apiV1 = NewOAuthV1(appId, host, accessKey, secretKey)
+	apiV1 = NewOAuthV1(appId, host, accessKey, secretKey, checkKey)
 
-	apiV1.After(displayReqAndResp)
+	apiV1.After(DisplayRequestAndRespponseMiddleware)
+	apiV1.After(CheckResponseMiddleware)
 
 	fmt.Println(fmt.Sprintf("%+v", apiV1))
 	m.Run()
@@ -39,7 +38,7 @@ const (
 
 func TestOAuthV1_DoLogin(t *testing.T) {
 	var (
-		code   = "aa005e6924"
+		code   = "fbbd3724dc"
 		scopes = []int{ScopeLogin}
 	)
 	resp, _, err := apiV1.DoLogin(code, state, device, scopes)
@@ -71,7 +70,7 @@ func TestOAuthV1_LogoutToken(t *testing.T) {
 
 func TestOAuthV1_QueryUserDetail(t *testing.T) {
 	var (
-		openId = "9b442f4561905244a02f1cbc4bd4db5c"
+		openId = "59991c0e35855a48bb1157295dd63ce4"
 	)
 	resp, _, err := apiV1.QueryUserDetail(openId)
 
@@ -152,25 +151,4 @@ func TestOAuthV1_RedoPayCallback(t *testing.T) {
 
 	assert.Equal(t, nil, err)
 	assert.Equal(t, true, resp.Ok)
-}
-
-func displayReqAndResp(req *http.Request, resp *http.Response) (err error) {
-	reqBodyByte, err := ioutil.ReadAll(req.Body)
-	if err != nil {
-		return
-	}
-	req.Body = ioutil.NopCloser(bytes.NewBuffer(reqBodyByte))
-
-	fmt.Println(fmt.Sprintf("req.method = %+v", req.Method))
-	fmt.Println(fmt.Sprintf("req.url = %+v", req.URL.String()))
-	fmt.Println(fmt.Sprintf("req.body = %s", string(reqBodyByte)))
-
-	respBodyByte, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return
-	}
-	resp.Body = ioutil.NopCloser(bytes.NewBuffer(respBodyByte))
-
-	fmt.Println(fmt.Sprintf("resp.body = %s", string(respBodyByte)))
-	return
 }

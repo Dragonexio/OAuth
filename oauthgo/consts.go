@@ -1,5 +1,6 @@
 package oauthgo
 
+// scopes
 const (
 	ScopeLogin       = 1
 	ScopeWithdraw    = 3
@@ -9,11 +10,13 @@ const (
 	ScopeAssetInfo   = 7
 )
 
+// transfer direction between user and app
 const (
 	OrderDirectionUser2App = 1
 	OrderDirectionApp2User = 2
 )
 
+// dragonex pay order status
 const (
 	OrderStatusSucceed      = 1
 	OrderStatusFailed       = 2

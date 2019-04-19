@@ -11,25 +11,37 @@ import (
 	"time"
 )
 
-type BeforeHandler func(req *http.Request) (err error)
+type BeforeHandler func(oauth OAuth, req *http.Request) (err error)
 
-type AfterHandler func(req *http.Request, resp *http.Response) (err error)
+type AfterHandler func(oauth OAuth, req *http.Request, resp *http.Response) (err error)
 
 type OAuth interface {
+	// return AppId
+	GetAppId() (appId string)
+
+	// return host
+	GetHost() (host string)
+
+	// return access key
+	GetAccessKey() (accessKey string)
+
+	// return secret key
+	GetSecretKey() (secretKey string)
+
+	// return check key
+	GetCheckKey() (checkKey string)
+
 	// make http.Request
 	NewRequest(method, url string, values map[string]interface{}, header http.Header) (req *http.Request, err error)
 
 	// do http request
 	Do(req *http.Request, i interface{}) (hResp *http.Response, err error)
 
-	// add middleware before doing request
+	// add middleware beforeHandlers doing request
 	Before(handlers ...BeforeHandler)
 
-	// add middleware after doing request
+	// add middleware afterHandlers doing request
 	After(handlers ...AfterHandler)
-
-	// return AppId
-	GetAppId() (appId string)
 }
 
 const (
@@ -51,23 +63,58 @@ type DefaultOAuth struct {
 	host           string
 	accessKey      string
 	secretKey      string
+	checkKey       string
 	beforeHandlers []BeforeHandler
 	afterHandlers  []AfterHandler
 }
 
-func NewDefaultOAuth(appId, host, accessKey, secretKey string) (client *DefaultOAuth) {
+func NewDefaultOAuth(appId, host, accessKey, secretKey, checkKey string) (client *DefaultOAuth) {
 	return &DefaultOAuth{
 		appId:     appId,
 		host:      host,
 		accessKey: accessKey,
 		secretKey: secretKey,
+		checkKey:  checkKey,
 	}
 }
 
-func (d *DefaultOAuth) Do(req *http.Request, i interface{}) (hResp *http.Response, err error) {
-	// before doing request
-	for _, handler := range d.beforeHandlers {
-		err = handler(req)
+func (oauth *DefaultOAuth) GetAppId() string {
+	return oauth.appId
+}
+
+func (oauth *DefaultOAuth) GetHost() string {
+	return oauth.host
+}
+
+func (oauth *DefaultOAuth) GetAccessKey() string {
+	return oauth.accessKey
+}
+
+func (oauth *DefaultOAuth) GetSecretKey() string {
+	return oauth.secretKey
+}
+
+func (oauth *DefaultOAuth) GetCheckKey() string {
+	return oauth.checkKey
+}
+
+func (oauth *DefaultOAuth) NewRequest(method, path string, values map[string]interface{}, header http.Header) (req *http.Request, err error) {
+	switch strings.ToUpper(method) {
+	case http.MethodGet, "":
+		return oauth.makeGetRequest(path, values, header)
+
+	case http.MethodPost:
+		return oauth.makePostRequest(path, values, header)
+
+	default:
+		return req, ErrNotSupportMethod
+	}
+}
+
+func (oauth *DefaultOAuth) Do(req *http.Request, i interface{}) (hResp *http.Response, err error) {
+	// do something before doing request
+	for _, handler := range oauth.beforeHandlers {
+		err = handler(oauth, req)
 		if err != nil {
 			return
 		}
@@ -82,9 +129,9 @@ func (d *DefaultOAuth) Do(req *http.Request, i interface{}) (hResp *http.Respons
 		_ = hResp.Body.Close()
 	}()
 
-	// after doing request
-	for _, handler := range d.afterHandlers {
-		err = handler(req, hResp)
+	// do something after doing request
+	for _, handler := range oauth.afterHandlers {
+		err = handler(oauth, req, hResp)
 		if err != nil {
 			return
 		}
@@ -108,43 +155,27 @@ func (d *DefaultOAuth) Do(req *http.Request, i interface{}) (hResp *http.Respons
 	return
 }
 
-func (d *DefaultOAuth) NewRequest(method, path string, values map[string]interface{}, header http.Header) (req *http.Request, err error) {
-	switch strings.ToUpper(method) {
-	case http.MethodGet, "":
-		return d.makeGetRequest(path, values, header)
-
-	case http.MethodPost:
-		return d.makePostRequest(path, values, header)
-
-	default:
-		return req, ErrNotSupportMethod
-	}
-}
-
-func (d *DefaultOAuth) Before(handlers ...BeforeHandler) {
-	if d.beforeHandlers == nil {
-		d.beforeHandlers = make([]BeforeHandler, 0, len(handlers))
+func (oauth *DefaultOAuth) Before(handlers ...BeforeHandler) {
+	if oauth.beforeHandlers == nil {
+		oauth.beforeHandlers = make([]BeforeHandler, 0, len(handlers))
 	}
 
-	d.beforeHandlers = append(d.beforeHandlers, handlers...)
+	oauth.beforeHandlers = append(oauth.beforeHandlers, handlers...)
 }
 
-func (d *DefaultOAuth) After(handlers ...AfterHandler) {
-	if d.afterHandlers == nil {
-		d.afterHandlers = make([]AfterHandler, 0, len(handlers))
+func (oauth *DefaultOAuth) After(handlers ...AfterHandler) {
+	if oauth.afterHandlers == nil {
+		oauth.afterHandlers = make([]AfterHandler, 0, len(handlers))
 	}
 
-	d.afterHandlers = append(d.afterHandlers, handlers...)
+	oauth.afterHandlers = append(oauth.afterHandlers, handlers...)
 }
 
-func (d *DefaultOAuth) GetAppId() string {
-	return d.appId
-}
-func (d *DefaultOAuth) makeGetRequest(path string, values map[string]interface{}, header http.Header) (req *http.Request, err error) {
+func (oauth *DefaultOAuth) makeGetRequest(path string, values map[string]interface{}, header http.Header) (req *http.Request, err error) {
 	method := http.MethodGet
 
-	if strings.HasSuffix(d.host, "/") {
-		d.host = d.host[:len(d.host)-1]
+	if strings.HasSuffix(oauth.host, "/") {
+		oauth.host = oauth.host[:len(oauth.host)-1]
 	}
 
 	valuesStringSlice := make([]string, 0, len(values))
@@ -152,7 +183,7 @@ func (d *DefaultOAuth) makeGetRequest(path string, values map[string]interface{}
 		valuesStringSlice = append(valuesStringSlice, fmt.Sprintf("%s=%s", k, fmt.Sprint(v)))
 	}
 
-	reqUrl := fmt.Sprintf("%s%s?%s", d.host, path, strings.Join(valuesStringSlice, "&"))
+	reqUrl := fmt.Sprintf("%s%s?%s", oauth.host, path, strings.Join(valuesStringSlice, "&"))
 	req, err = http.NewRequest(method, reqUrl, nil)
 	if err != nil {
 		return
@@ -164,13 +195,13 @@ func (d *DefaultOAuth) makeGetRequest(path string, values map[string]interface{}
 	return
 }
 
-func (d *DefaultOAuth) makePostRequest(path string, values map[string]interface{}, header http.Header) (req *http.Request, err error) {
+func (oauth *DefaultOAuth) makePostRequest(path string, values map[string]interface{}, header http.Header) (req *http.Request, err error) {
 	method := http.MethodPost
 
-	if strings.HasSuffix(d.host, "/") {
-		d.host = d.host[:len(d.host)-1]
+	if strings.HasSuffix(oauth.host, "/") {
+		oauth.host = oauth.host[:len(oauth.host)-1]
 	}
-	reqUrl := fmt.Sprintf("%s%s", d.host, path)
+	reqUrl := fmt.Sprintf("%s%s", oauth.host, path)
 
 	bodyByte, err := json.Marshal(values)
 	if err != nil {
@@ -184,13 +215,13 @@ func (d *DefaultOAuth) makePostRequest(path string, values map[string]interface{
 
 	req.Header.Add(HeaderDate, time.Now().UTC().Format(GmtFormat))
 	req.Header.Add(HeaderContentType, MIMEApplicationJSON)
-	req.Header.Add(HeaderAppId, d.appId)
+	req.Header.Add(HeaderAppId, oauth.appId)
 
-	sign, err := sign(method, path, req.Header, d.secretKey)
+	sign, err := sign(method, path, req.Header, oauth.secretKey)
 	if err != nil {
 		return
 	}
-	auth := fmt.Sprintf("%s:%s", d.accessKey, sign)
+	auth := fmt.Sprintf("%s:%s", oauth.accessKey, sign)
 	req.Header.Add(HeaderAuth, auth)
 
 	for k, v := range header {

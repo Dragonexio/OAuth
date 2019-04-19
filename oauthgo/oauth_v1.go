@@ -11,9 +11,9 @@ type OAuthV1 struct {
 	OAuth
 }
 
-func NewOAuthV1(appId, host, accessKey, secretKey string) (oAuth *OAuthV1) {
+func NewOAuthV1(appId, host, accessKey, secretKey, checkKey string) (oAuth *OAuthV1) {
 	return &OAuthV1{
-		OAuth: NewDefaultOAuth(appId, host, accessKey, secretKey),
+		OAuth: NewDefaultOAuth(appId, host, accessKey, secretKey, checkKey),
 	}
 }
 
