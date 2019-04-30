@@ -37,10 +37,10 @@ type OAuth interface {
 	// do http request
 	Do(req *http.Request, i interface{}) (hResp *http.Response, err error)
 
-	// add middleware beforeHandlers doing request
+	// add middleware before doing request
 	Before(handlers ...BeforeHandler)
 
-	// add middleware afterHandlers doing request
+	// add middleware after doing request
 	After(handlers ...AfterHandler)
 }
 
