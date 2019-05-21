@@ -20,10 +20,10 @@ func TestMain(m *testing.M) {
 		host      = "https://oauth.dragonex.io"
 		accessKey = "87079e4662685c40a884baa744f571b4"
 		secretKey = "a24d0648e60a5c7a9d250137c472d8f4"
-		checkKey  = "testKey"
+		signKey   = "testKey"
 	)
 
-	apiV1 = NewOAuthV1(appId, host, accessKey, secretKey, checkKey)
+	apiV1 = NewOAuthV1(appId, host, accessKey, secretKey, signKey)
 
 	apiV1.After(displayRequestAndRespponseMiddleware)
 	apiV1.After(CheckResponseMiddleware)

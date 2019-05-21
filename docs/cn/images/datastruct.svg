@@ -36,53 +36,53 @@
 <!-- App -->
 <g id="node2" class="node">
 <title>App</title>
-<polygon fill="none" stroke="#000000" points="396.5,-178.5 396.5,-776.5 875.5,-776.5 875.5,-178.5 396.5,-178.5"/>
+<polygon fill="none" stroke="#000000" points="392,-178.5 392,-776.5 880,-776.5 880,-178.5 392,-178.5"/>
 <text text-anchor="middle" x="636" y="-759.7" font-family="Times,serif" font-size="16.00" fill="#000000">App信息</text>
-<polyline fill="none" stroke="#000000" points="396.5,-750.5 875.5,-750.5 "/>
-<text text-anchor="start" x="404.5" y="-733.7" font-family="Times,serif" font-size="16.00" fill="#000000">app_id(string) </text>
-<text text-anchor="end" x="867.5" y="-715.7" font-family="Times,serif" font-size="16.00" fill="#000000"> 接入方AppId，由DragonEx确定</text>
-<polyline fill="none" stroke="#000000" points="396.5,-706.5 875.5,-706.5 "/>
-<text text-anchor="start" x="404.5" y="-689.7" font-family="Times,serif" font-size="16.00" fill="#000000">(string) company_id </text>
-<text text-anchor="end" x="867.5" y="-671.7" font-family="Times,serif" font-size="16.00" fill="#000000"> 接入方APP对应的CompanyId</text>
-<polyline fill="none" stroke="#000000" points="396.5,-662.5 875.5,-662.5 "/>
-<text text-anchor="start" x="404.5" y="-645.7" font-family="Times,serif" font-size="16.00" fill="#000000">admin_uid(int) </text>
-<text text-anchor="end" x="867.5" y="-627.7" font-family="Times,serif" font-size="16.00" fill="#000000"> APP的管理员账户ID</text>
-<polyline fill="none" stroke="#000000" points="396.5,-618.5 875.5,-618.5 "/>
-<text text-anchor="start" x="404.5" y="-601.7" font-family="Times,serif" font-size="16.00" fill="#000000">name(string) </text>
-<text text-anchor="end" x="867.5" y="-583.7" font-family="Times,serif" font-size="16.00" fill="#000000"> APP名称，可配置多语言版本</text>
-<polyline fill="none" stroke="#000000" points="396.5,-574.5 875.5,-574.5 "/>
-<text text-anchor="start" x="404.5" y="-557.7" font-family="Times,serif" font-size="16.00" fill="#000000">poster(string) </text>
-<text text-anchor="end" x="867.5" y="-539.7" font-family="Times,serif" font-size="16.00" fill="#000000"> 宣传海报地址，可配置多语言版本</text>
-<polyline fill="none" stroke="#000000" points="396.5,-530.5 875.5,-530.5 "/>
-<text text-anchor="start" x="404.5" y="-513.7" font-family="Times,serif" font-size="16.00" fill="#000000">website(string) </text>
-<text text-anchor="end" x="867.5" y="-495.7" font-family="Times,serif" font-size="16.00" fill="#000000"> APP主页地址</text>
-<polyline fill="none" stroke="#000000" points="396.5,-486.5 875.5,-486.5 "/>
-<text text-anchor="start" x="404.5" y="-469.7" font-family="Times,serif" font-size="16.00" fill="#000000">logo(string) </text>
-<text text-anchor="end" x="867.5" y="-451.7" font-family="Times,serif" font-size="16.00" fill="#000000"> APP Logo</text>
-<polyline fill="none" stroke="#000000" points="396.5,-442.5 875.5,-442.5 "/>
-<text text-anchor="start" x="404.5" y="-425.7" font-family="Times,serif" font-size="16.00" fill="#000000">scopes(int[]) </text>
-<text text-anchor="end" x="867.5" y="-407.7" font-family="Times,serif" font-size="16.00" fill="#000000"> 该APP拥有的权限列表</text>
-<polyline fill="none" stroke="#000000" points="396.5,-398.5 875.5,-398.5 "/>
-<text text-anchor="start" x="404.5" y="-381.7" font-family="Times,serif" font-size="16.00" fill="#000000">coin_codes(string[]) </text>
-<text text-anchor="end" x="867.5" y="-363.7" font-family="Times,serif" font-size="16.00" fill="#000000"> 该APP可支付的币种列表</text>
-<polyline fill="none" stroke="#000000" points="396.5,-354.5 875.5,-354.5 "/>
-<text text-anchor="start" x="404.5" y="-337.7" font-family="Times,serif" font-size="16.00" fill="#000000">cut_rate(string) </text>
-<text text-anchor="end" x="867.5" y="-319.7" font-family="Times,serif" font-size="16.00" fill="#000000"> 该APP支付时收取的佣金比例</text>
-<polyline fill="none" stroke="#000000" points="396.5,-310.5 875.5,-310.5 "/>
-<text text-anchor="start" x="404.5" y="-293.7" font-family="Times,serif" font-size="16.00" fill="#000000">entry(string) </text>
-<text text-anchor="end" x="867.5" y="-275.7" font-family="Times,serif" font-size="16.00" fill="#000000"> 从DragonEx开放平台进入该APP的入口地址，可由APP管理员修改</text>
-<polyline fill="none" stroke="#000000" points="396.5,-266.5 875.5,-266.5 "/>
-<text text-anchor="start" x="404.5" y="-249.7" font-family="Times,serif" font-size="16.00" fill="#000000">callback(string) </text>
-<text text-anchor="end" x="867.5" y="-231.7" font-family="Times,serif" font-size="16.00" fill="#000000"> 该APP的支付回调地址，可由APP管理员修改</text>
-<polyline fill="none" stroke="#000000" points="396.5,-222.5 875.5,-222.5 "/>
-<text text-anchor="start" x="404.5" y="-205.7" font-family="Times,serif" font-size="16.00" fill="#000000">resp_check_key(string) </text>
-<text text-anchor="end" x="867.5" y="-187.7" font-family="Times,serif" font-size="16.00" fill="#000000"> 该APP服务端校验DragonEx HTTP响应的key，可由APP管理员修改</text>
+<polyline fill="none" stroke="#000000" points="392,-750.5 880,-750.5 "/>
+<text text-anchor="start" x="400" y="-733.7" font-family="Times,serif" font-size="16.00" fill="#000000">app_id(string) </text>
+<text text-anchor="end" x="872" y="-715.7" font-family="Times,serif" font-size="16.00" fill="#000000"> 接入方AppId，由DragonEx确定</text>
+<polyline fill="none" stroke="#000000" points="392,-706.5 880,-706.5 "/>
+<text text-anchor="start" x="400" y="-689.7" font-family="Times,serif" font-size="16.00" fill="#000000">(string) company_id </text>
+<text text-anchor="end" x="872" y="-671.7" font-family="Times,serif" font-size="16.00" fill="#000000"> 接入方APP对应的CompanyId</text>
+<polyline fill="none" stroke="#000000" points="392,-662.5 880,-662.5 "/>
+<text text-anchor="start" x="400" y="-645.7" font-family="Times,serif" font-size="16.00" fill="#000000">admin_uid(int) </text>
+<text text-anchor="end" x="872" y="-627.7" font-family="Times,serif" font-size="16.00" fill="#000000"> APP的管理员账户ID</text>
+<polyline fill="none" stroke="#000000" points="392,-618.5 880,-618.5 "/>
+<text text-anchor="start" x="400" y="-601.7" font-family="Times,serif" font-size="16.00" fill="#000000">name(string) </text>
+<text text-anchor="end" x="872" y="-583.7" font-family="Times,serif" font-size="16.00" fill="#000000"> APP名称，可配置多语言版本</text>
+<polyline fill="none" stroke="#000000" points="392,-574.5 880,-574.5 "/>
+<text text-anchor="start" x="400" y="-557.7" font-family="Times,serif" font-size="16.00" fill="#000000">poster(string) </text>
+<text text-anchor="end" x="872" y="-539.7" font-family="Times,serif" font-size="16.00" fill="#000000"> 宣传海报地址，可配置多语言版本</text>
+<polyline fill="none" stroke="#000000" points="392,-530.5 880,-530.5 "/>
+<text text-anchor="start" x="400" y="-513.7" font-family="Times,serif" font-size="16.00" fill="#000000">website(string) </text>
+<text text-anchor="end" x="872" y="-495.7" font-family="Times,serif" font-size="16.00" fill="#000000"> APP主页地址</text>
+<polyline fill="none" stroke="#000000" points="392,-486.5 880,-486.5 "/>
+<text text-anchor="start" x="400" y="-469.7" font-family="Times,serif" font-size="16.00" fill="#000000">logo(string) </text>
+<text text-anchor="end" x="872" y="-451.7" font-family="Times,serif" font-size="16.00" fill="#000000"> APP Logo</text>
+<polyline fill="none" stroke="#000000" points="392,-442.5 880,-442.5 "/>
+<text text-anchor="start" x="400" y="-425.7" font-family="Times,serif" font-size="16.00" fill="#000000">scopes(int[]) </text>
+<text text-anchor="end" x="872" y="-407.7" font-family="Times,serif" font-size="16.00" fill="#000000"> 该APP拥有的权限列表</text>
+<polyline fill="none" stroke="#000000" points="392,-398.5 880,-398.5 "/>
+<text text-anchor="start" x="400" y="-381.7" font-family="Times,serif" font-size="16.00" fill="#000000">coin_codes(string[]) </text>
+<text text-anchor="end" x="872" y="-363.7" font-family="Times,serif" font-size="16.00" fill="#000000"> 该APP可支付的币种列表</text>
+<polyline fill="none" stroke="#000000" points="392,-354.5 880,-354.5 "/>
+<text text-anchor="start" x="400" y="-337.7" font-family="Times,serif" font-size="16.00" fill="#000000">cut_rate(string) </text>
+<text text-anchor="end" x="872" y="-319.7" font-family="Times,serif" font-size="16.00" fill="#000000"> 该APP支付时收取的佣金比例</text>
+<polyline fill="none" stroke="#000000" points="392,-310.5 880,-310.5 "/>
+<text text-anchor="start" x="400" y="-293.7" font-family="Times,serif" font-size="16.00" fill="#000000">entry(string) </text>
+<text text-anchor="end" x="872" y="-275.7" font-family="Times,serif" font-size="16.00" fill="#000000"> 从DragonEx开放平台进入该APP的入口地址</text>
+<polyline fill="none" stroke="#000000" points="392,-266.5 880,-266.5 "/>
+<text text-anchor="start" x="400" y="-249.7" font-family="Times,serif" font-size="16.00" fill="#000000">callback(string) </text>
+<text text-anchor="end" x="872" y="-231.7" font-family="Times,serif" font-size="16.00" fill="#000000"> 该APP的支付回调地址，可由APP管理员修改</text>
+<polyline fill="none" stroke="#000000" points="392,-222.5 880,-222.5 "/>
+<text text-anchor="start" x="400" y="-205.7" font-family="Times,serif" font-size="16.00" fill="#000000">sign_key(string) </text>
+<text text-anchor="end" x="872" y="-187.7" font-family="Times,serif" font-size="16.00" fill="#000000"> 该APP服务端校验DragonEx HTTP响应的密钥，可由APP管理员修改</text>
 </g>
 <!-- Company&#45;&gt;App -->
 <g id="edge1" class="edge">
 <title>Company:company_id&#45;&gt;App:company_id</title>
-<path fill="none" stroke="#000000" d="M350,-397.5C475.5251,-397.5 278.5711,-668.4743 385.8307,-683.8225"/>
-<polygon fill="#000000" stroke="#000000" points="385.7894,-687.3274 396,-684.5 386.2548,-680.3429 385.7894,-687.3274"/>
+<path fill="none" stroke="#000000" d="M350,-397.5C475.2633,-397.5 275.034,-668.4743 381.8612,-683.8225"/>
+<polygon fill="#000000" stroke="#000000" points="381.7889,-687.3254 392,-684.5 382.2556,-680.3409 381.7889,-687.3254"/>
 </g>
 <!-- UnionId -->
 <g id="node6" class="node">
@@ -138,8 +138,8 @@
 <!-- App&#45;&gt;Scopes1 -->
 <g id="edge6" class="edge">
 <title>App:scopes&#45;&gt;Scopes1:scopes</title>
-<path fill="none" stroke="#000000" d="M876,-420.5C934.6698,-420.5 951.4443,-410.7108 1005.3681,-409.6019"/>
-<polygon fill="#000000" stroke="#000000" points="1005.5357,-413.1005 1015.5,-409.5 1005.4653,-406.1008 1005.5357,-413.1005"/>
+<path fill="none" stroke="#000000" d="M880,-420.5C936.8801,-420.5 953.2047,-410.7513 1005.3322,-409.6089"/>
+<polygon fill="#000000" stroke="#000000" points="1005.5381,-413.107 1015.5,-409.5 1005.4631,-406.1074 1005.5381,-413.107"/>
 </g>
 <!-- AppKey -->
 <g id="node5" class="node">
@@ -162,8 +162,8 @@
 <!-- App&#45;&gt;AppKey -->
 <g id="edge4" class="edge">
 <title>App:app_id&#45;&gt;AppKey:app_id</title>
-<path fill="none" stroke="#000000" d="M876,-728.5C915.1035,-728.5 893.7552,-680.5429 922,-653.5 957.8201,-619.2042 971.5413,-598.3924 1016.4292,-595.7796"/>
-<polygon fill="#000000" stroke="#000000" points="1016.601,-599.2763 1026.5,-595.5 1016.4067,-592.279 1016.601,-599.2763"/>
+<path fill="none" stroke="#000000" d="M880,-728.5C918.2041,-728.5 894.9344,-680.4631 922,-653.5 957.1327,-618.5004 971.45,-598.299 1016.4201,-595.7703"/>
+<polygon fill="#000000" stroke="#000000" points="1016.5975,-599.2669 1026.5,-595.5 1016.4097,-592.2694 1016.5975,-599.2669"/>
 </g>
 <!-- OpenId -->
 <g id="node7" class="node">
@@ -180,7 +180,7 @@
 <!-- App&#45;&gt;OpenId -->
 <g id="edge3" class="edge">
 <title>App:app_id&#45;&gt;OpenId:app_id</title>
-<path fill="none" stroke="#000000" d="M876,-728.5C892.6111,-728.5 899.0998,-728.5 911.915,-728.5"/>
+<path fill="none" stroke="#000000" d="M880,-728.5C894.7292,-728.5 900.7417,-728.5 911.7935,-728.5"/>
 <polygon fill="#000000" stroke="#000000" points="912,-732.0001 922,-728.5 912,-725.0001 912,-732.0001"/>
 </g>
 <!-- AccessToken -->
@@ -210,8 +210,8 @@
 <!-- App&#45;&gt;AccessToken -->
 <g id="edge5" class="edge">
 <title>App:app_id&#45;&gt;AccessToken:app_id</title>
-<path fill="none" stroke="#000000" d="M876,-728.5C925.7301,-728.5 886.8381,-795.3329 922,-830.5 1090.7435,-999.2684 1174.0399,-1052.9807 1408.311,-1054.468"/>
-<polygon fill="#000000" stroke="#000000" points="1408.489,-1057.9685 1418.5,-1054.5 1408.5111,-1050.9686 1408.489,-1057.9685"/>
+<path fill="none" stroke="#000000" d="M880,-728.5C929.0261,-728.5 887.9137,-795.2625 922,-830.5 1087.9306,-1002.0347 1173.9602,-1053.0591 1408.3093,-1054.4697"/>
+<polygon fill="#000000" stroke="#000000" points="1408.4896,-1057.9702 1418.5,-1054.5 1408.5105,-1050.9702 1408.4896,-1057.9702"/>
 </g>
 <!-- TransLog -->
 <g id="node9" class="node">
@@ -258,7 +258,7 @@
 <!-- App&#45;&gt;TransLog -->
 <g id="edge9" class="edge">
 <title>App:app_id&#45;&gt;TransLog:app_id</title>
-<path fill="none" stroke="#000000" d="M876,-728.5C908.9009,-728.5 892.3764,-772.1852 922,-786.5 1068.0628,-857.0811 1151.7611,-876.0906 1287,-786.5 1317.8621,-766.055 1288.9352,-713.2978 1313.1335,-703.1886"/>
+<path fill="none" stroke="#000000" d="M880,-728.5C911.8267,-728.5 893.6536,-772.0286 922,-786.5 1066.483,-860.2612 1151.7611,-876.0906 1287,-786.5 1317.8621,-766.055 1288.9352,-713.2978 1313.1335,-703.1886"/>
 <polygon fill="#000000" stroke="#000000" points="1313.7338,-706.6369 1323,-701.5 1312.5529,-699.7372 1313.7338,-706.6369"/>
 </g>
 <!-- Scopes2 -->

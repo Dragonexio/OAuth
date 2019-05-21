@@ -31,9 +31,9 @@ App [
     | <scopes> scopes(int[]) \l 该APP拥有的权限列表\r
     | coin_codes(string[]) \l 该APP可支付的币种列表\r
     | cut_rate(string) \l 该APP支付时收取的佣金比例\r
-    | entry(string) \l 从DragonEx开放平台进入该APP的入口地址，可由APP管理员修改\r
+    | entry(string) \l 从DragonEx开放平台进入该APP的入口地址\r
     | callback(string) \l 该APP的支付回调地址，可由APP管理员修改\r
-    | resp_check_key(string) \l 该APP服务端校验DragonEx HTTP响应的key，可由APP管理员修改\r
+    | sign_key(string) \l 该APP服务端校验DragonEx HTTP响应的密钥，可由APP管理员修改\r
     "
 ]
 

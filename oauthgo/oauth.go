@@ -29,7 +29,7 @@ type OAuth interface {
 	GetSecretKey() (secretKey string)
 
 	// return check key
-	GetCheckKey() (checkKey string)
+	GetSignKey() (checkKey string)
 
 	// make http.Request
 	NewRequest(method, url string, values map[string]interface{}, header http.Header) (req *http.Request, err error)
@@ -63,7 +63,7 @@ type DefaultOAuth struct {
 	host           string
 	accessKey      string
 	secretKey      string
-	checkKey       string
+	signKey        string
 	beforeHandlers []BeforeHandler
 	afterHandlers  []AfterHandler
 }
@@ -74,7 +74,7 @@ func NewDefaultOAuth(appId, host, accessKey, secretKey, checkKey string) (client
 		host:      host,
 		accessKey: accessKey,
 		secretKey: secretKey,
-		checkKey:  checkKey,
+		signKey:   checkKey,
 	}
 }
 
@@ -94,8 +94,8 @@ func (oauth *DefaultOAuth) GetSecretKey() string {
 	return oauth.secretKey
 }
 
-func (oauth *DefaultOAuth) GetCheckKey() string {
-	return oauth.checkKey
+func (oauth *DefaultOAuth) GetSignKey() string {
+	return oauth.signKey
 }
 
 func (oauth *DefaultOAuth) NewRequest(method, path string, values map[string]interface{}, header http.Header) (req *http.Request, err error) {
