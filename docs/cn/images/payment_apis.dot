@@ -1,0 +1,48 @@
+digraph g {
+graph [
+    rankdir = "LR"
+];
+
+node [
+    fontsize = "16"
+    shape=record
+];
+
+LoginApis [
+    label = "支付相关接口或页面
+    | {
+        接入方需提供的接口或页面 |
+        {
+            用户支付成功（或失败）后跳转到的接入方地址 \l
+            | 支付回调地址 \l
+        }
+    }
+
+    | {
+        DragonEx前端支付页 |
+        {
+            接入方申请支付后，会随接口响应返回此订单的支付地址，\l接入方跳转到该地址即可 \l
+        }
+    }
+    
+    | {
+        接入方客户端调用 | 
+        {
+            /api/v1/pay/order/detail/ \l 查询订单详情 \r
+            | /api/v1/pay/order/history/ \l 查询历史订单，只能查询属于当前用户的 \r
+        }            
+    }
+
+    | {
+        接入方服务端调用 | 
+        {
+            /api/v1/pay/user2app/pre/ \l 申请支付（用户向接入方支付）\r
+            | /api/v1/pay/app2user/do/ \l 从接入方转账给用户\r
+            | /api/v1/pay/order/detail/ \l 查询订单详情 \r
+            | /api/v1/pay/order/history/ \l 查询历史订单 \r
+            | /api/v1/pay/callback/redo/ \l 接入方主动要求某支付记录发起回调\r（不论支付是否成功，也不论之前是否已回调，均会再次发起回调） \r
+        }
+    }
+    "
+]
+}

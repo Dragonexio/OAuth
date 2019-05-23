@@ -28,7 +28,7 @@ type OAuth interface {
 	// return secret key
 	GetSecretKey() (secretKey string)
 
-	// return check key
+	// return sign key
 	GetSignKey() (checkKey string)
 
 	// make http.Request
@@ -68,13 +68,13 @@ type DefaultOAuth struct {
 	afterHandlers  []AfterHandler
 }
 
-func NewDefaultOAuth(appId, host, accessKey, secretKey, checkKey string) (client *DefaultOAuth) {
+func NewDefaultOAuth(appId, host, accessKey, secretKey, signKey string) (client *DefaultOAuth) {
 	return &DefaultOAuth{
 		appId:     appId,
 		host:      host,
 		accessKey: accessKey,
 		secretKey: secretKey,
-		signKey:   checkKey,
+		signKey:   signKey,
 	}
 }
 
