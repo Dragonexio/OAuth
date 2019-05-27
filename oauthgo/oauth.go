@@ -113,6 +113,15 @@ func (oauth *DefaultOAuth) NewRequest(method, path string, values map[string]int
 
 func (oauth *DefaultOAuth) Do(req *http.Request, i interface{}) (hResp *http.Response, err error) {
 	// do something before doing request
+	reqBodyByte, err := ioutil.ReadAll(req.Body)
+	if err != nil {
+		return
+	}
+	req.Body = ioutil.NopCloser(bytes.NewBuffer(reqBodyByte))
+	defer func() {
+		req.Body = ioutil.NopCloser(bytes.NewBuffer(reqBodyByte))
+	}()
+
 	for _, handler := range oauth.beforeHandlers {
 		err = handler(oauth, req)
 		if err != nil {
@@ -122,11 +131,21 @@ func (oauth *DefaultOAuth) Do(req *http.Request, i interface{}) (hResp *http.Res
 
 	client := http.Client{}
 	hResp, err = client.Do(req)
+	req.Body = ioutil.NopCloser(bytes.NewBuffer(reqBodyByte))
 	if err != nil {
 		return
 	}
 	defer func() {
 		_ = hResp.Body.Close()
+	}()
+
+	body, err := ioutil.ReadAll(hResp.Body)
+	if err != nil {
+		return
+	}
+	hResp.Body = ioutil.NopCloser(bytes.NewBuffer(body))
+	defer func() {
+		hResp.Body = ioutil.NopCloser(bytes.NewBuffer(body))
 	}()
 
 	// do something after doing request
@@ -140,12 +159,6 @@ func (oauth *DefaultOAuth) Do(req *http.Request, i interface{}) (hResp *http.Res
 	if hResp.StatusCode != http.StatusOK {
 		return hResp, ErrNot200StatusCode
 	}
-
-	body, err := ioutil.ReadAll(hResp.Body)
-	if err != nil {
-		return
-	}
-	hResp.Body = ioutil.NopCloser(bytes.NewBuffer(body))
 
 	err = json.Unmarshal(body, i)
 	if err != nil {

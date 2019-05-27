@@ -25,7 +25,7 @@ func TestMain(m *testing.M) {
 
 	apiV1 = NewOAuthV1(appId, host, accessKey, secretKey, signKey)
 
-	apiV1.After(displayRequestAndRespponseMiddleware)
+	apiV1.After(displayRequestAndResponseMiddleware)
 	apiV1.After(CheckResponseMiddleware)
 
 	m.Run()
@@ -155,7 +155,7 @@ func TestOAuthV1_RedoPayCallback(t *testing.T) {
 	assert.Equal(t, true, resp.Ok)
 }
 
-func displayRequestAndRespponseMiddleware(oauth OAuth, req *http.Request, resp *http.Response) (err error) {
+func displayRequestAndResponseMiddleware(oauth OAuth, req *http.Request, resp *http.Response) (err error) {
 	reqBodyByte, err := ioutil.ReadAll(req.Body)
 	if err != nil {
 		return
