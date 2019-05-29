@@ -23,9 +23,9 @@ LoginApis [
         {
             https://dragonex.io/oauth/login/ \l
             | https://dragonex.im/oauth/login/ \l
-            | https://dragonex.co/oauth/login/ \l
-            | 从DragonEx开放平台跳转到第三方应用的入口页面时，\l会传入domain（`io`、`im`或`co`）表示用户当前使用的顶级域名，\l
-            接入方需要根据此domain决定跳转到上述的哪个url\l
+            | ... \l
+            | 从DragonEx开放平台跳转到第三方应用的入口页面时，\l会传入domain（`dragonex.io`、`dragonex.im`或`test.dragonex.co`等）表示用户当前使用的域名，\l
+            接入方需要根据此domain决定跳转到哪个授权页面\l
         }
     }
     
