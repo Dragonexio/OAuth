@@ -321,3 +321,87 @@ func (d *OAuthV1) RedoPayCallback(tradeNo string) (r *RedoPayCallbackResponse, h
 	hResp, err = d.Do(req, r)
 	return
 }
+
+type UserCoinDetail struct {
+	Uid    int64           `json:"uid"`
+	CoinId int64           `json:"coin_id"`
+	Code   string          `json:"code"`
+	Total  decimal.Decimal `json:"total"`
+	Frozen decimal.Decimal `json:"frozen"`
+}
+
+type ListUserCoinsResponse struct {
+	BaseResponse
+	Data []*UserCoinDetail
+}
+
+func (d *OAuthV1) listUserCoins(openId string, dragonExUid int64) (r *ListUserCoinsResponse, hResp *http.Response, err error) {
+	var (
+		path   = "/api/v1/user/coin/list/"
+		method = http.MethodPost
+		values = map[string]interface{}{
+			"open_id":      openId,
+			"dragonex_uid": dragonExUid,
+		}
+		headers = http.Header{}
+	)
+	req, err := d.NewRequest(method, path, values, headers)
+	if err != nil {
+		return
+	}
+
+	r = new(ListUserCoinsResponse)
+	hResp, err = d.Do(req, r)
+	return
+}
+
+func (d *OAuthV1) ListUserCoinsByOpenId(openId string) (r *ListUserCoinsResponse, hResp *http.Response, err error) {
+	return d.listUserCoins(openId, 0)
+}
+
+func (d *OAuthV1) ListUserCoinsByDragonExUid(dragonExUid int64) (r *ListUserCoinsResponse, hResp *http.Response, err error) {
+	return d.listUserCoins("", dragonExUid)
+}
+
+type QueryUserCoinResponse struct {
+	BaseResponse
+	Data *UserCoinDetail
+}
+
+func (d *OAuthV1) queryUserCoin(openId string, dragonExUid, CoinId int64, coinCode string) (r *QueryUserCoinResponse, hResp *http.Response, err error) {
+	var (
+		path   = "/api/v1/user/coin/detail/"
+		method = http.MethodPost
+		values = map[string]interface{}{
+			"open_id":      openId,
+			"dragonex_uid": dragonExUid,
+			"coin_id":      CoinId,
+			"coin_code":    coinCode,
+		}
+		headers = http.Header{}
+	)
+	req, err := d.NewRequest(method, path, values, headers)
+	if err != nil {
+		return
+	}
+
+	r = new(QueryUserCoinResponse)
+	hResp, err = d.Do(req, r)
+	return
+}
+
+func (d *OAuthV1) QueryUserCoinByOpenIdCoinId(openId string, CoinId int64) (r *QueryUserCoinResponse, hResp *http.Response, err error) {
+	return d.queryUserCoin(openId, 0, CoinId, "")
+}
+
+func (d *OAuthV1) QueryUserCoinByOpenIdCoinCode(openId, CoinCode string) (r *QueryUserCoinResponse, hResp *http.Response, err error) {
+	return d.queryUserCoin(openId, 0, 0, CoinCode)
+}
+
+func (d *OAuthV1) QueryUserCoinByDragonExUidCoinId(dragonExUid, CoinId int64) (r *QueryUserCoinResponse, hResp *http.Response, err error) {
+	return d.queryUserCoin("", dragonExUid, CoinId, "")
+}
+
+func (d *OAuthV1) QueryUserCoinByDragonExUidCoinCode(dragonExUid int64, CoinCode string) (r *QueryUserCoinResponse, hResp *http.Response, err error) {
+	return d.queryUserCoin("", dragonExUid, 0, CoinCode)
+}

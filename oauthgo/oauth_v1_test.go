@@ -155,6 +155,72 @@ func TestOAuthV1_RedoPayCallback(t *testing.T) {
 	assert.Equal(t, true, resp.Ok)
 }
 
+func TestOAuthV1_ListUserCoinsByOpenId(t *testing.T) {
+	var (
+		openId = "59991c0e35855a48bb1157295dd63ce4"
+	)
+
+	resp, _, err := apiV1.ListUserCoinsByOpenId(openId)
+
+	assert.Equal(t, nil, err)
+	assert.Equal(t, true, resp.Ok)
+}
+
+func TestOAuthV1_ListUserCoinsByDragonExUid(t *testing.T) {
+	var (
+		dragonExUid int64 = 1000000
+	)
+
+	resp, _, err := apiV1.ListUserCoinsByDragonExUid(dragonExUid)
+
+	assert.Equal(t, nil, err)
+	assert.Equal(t, true, resp.Ok)
+}
+
+func TestOAuthV1_QueryUserCoinByOpenIdCoinId(t *testing.T) {
+	var (
+		openId       = "59991c0e35855a48bb1157295dd63ce4"
+		coinId int64 = 1
+	)
+	resp, _, err := apiV1.QueryUserCoinByOpenIdCoinId(openId, coinId)
+
+	assert.Equal(t, nil, err)
+	assert.Equal(t, true, resp.Ok)
+}
+
+func TestOAuthV1_QueryUserCoinByOpenIdCoinCode(t *testing.T) {
+	var (
+		openId   = "59991c0e35855a48bb1157295dd63ce4"
+		coinCode = "usdt"
+	)
+	resp, _, err := apiV1.QueryUserCoinByOpenIdCoinCode(openId, coinCode)
+
+	assert.Equal(t, nil, err)
+	assert.Equal(t, true, resp.Ok)
+}
+
+func TestOAuthV1_QueryUserCoinByDragonExUidCoinId(t *testing.T) {
+	var (
+		dragonExUid int64 = 1000000
+		coinId      int64 = 1
+	)
+	resp, _, err := apiV1.QueryUserCoinByDragonExUidCoinId(dragonExUid, coinId)
+
+	assert.Equal(t, nil, err)
+	assert.Equal(t, true, resp.Ok)
+}
+
+func TestOAuthV1_QueryUserCoinByDragonExUidCoinCode(t *testing.T) {
+	var (
+		dragonExUid int64 = 1000000
+		coinCode          = "usdt"
+	)
+	resp, _, err := apiV1.QueryUserCoinByDragonExUidCoinCode(dragonExUid, coinCode)
+
+	assert.Equal(t, nil, err)
+	assert.Equal(t, true, resp.Ok)
+}
+
 func displayRequestAndResponseMiddleware(oauth OAuth, req *http.Request, resp *http.Response) (err error) {
 	reqBodyByte, err := ioutil.ReadAll(req.Body)
 	if err != nil {
