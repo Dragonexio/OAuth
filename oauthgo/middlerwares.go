@@ -2,6 +2,7 @@ package oauthgo
 
 import (
 	"bytes"
+	"context"
 	"crypto/md5"
 	"fmt"
 	"github.com/pkg/errors"
@@ -14,7 +15,7 @@ var (
 	ErrDifferentResponseSign = errors.New("different sign")
 )
 
-func CheckResponseMiddleware(oauth OAuth, req *http.Request, resp *http.Response) (err error) {
+func CheckResponseMiddleware(ctx context.Context, oauth OAuth, req *http.Request, resp *http.Response) (err error) {
 	dragonExTs := resp.Header.Get("dragonex-ts")
 	dragonExSign := resp.Header.Get("dragonex-sign")
 

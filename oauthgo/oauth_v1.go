@@ -1,6 +1,7 @@
 package oauthgo
 
 import (
+	"context"
 	"fmt"
 	"github.com/shopspring/decimal"
 	"net/http"
@@ -32,7 +33,7 @@ type DoLoginResponse struct {
 	}
 }
 
-func (d *OAuthV1) DoLogin(code, state, device string, scopes []int) (r *DoLoginResponse, hResp *http.Response, err error) {
+func (d *OAuthV1) DoLogin(ctx context.Context, code, state, device string, scopes []int) (r *DoLoginResponse, hResp *http.Response, err error) {
 	scopesSlice := make([]string, 0, len(scopes))
 	for _, scope := range scopes {
 		scopesSlice = append(scopesSlice, fmt.Sprint(scope))
@@ -56,7 +57,7 @@ func (d *OAuthV1) DoLogin(code, state, device string, scopes []int) (r *DoLoginR
 	}
 
 	r = new(DoLoginResponse)
-	hResp, err = d.Do(req, r)
+	hResp, err = d.Do(ctx, req, r)
 	return
 }
 
@@ -71,7 +72,7 @@ type RefreshTokenResponse struct {
 	}
 }
 
-func (d *OAuthV1) RefreshToken(accessToken, refreshToken string) (r *RefreshTokenResponse, hResp *http.Response, err error) {
+func (d *OAuthV1) RefreshToken(ctx context.Context, accessToken, refreshToken string) (r *RefreshTokenResponse, hResp *http.Response, err error) {
 	var (
 		path   = "/api/v1/login/refresh/"
 		method = http.MethodPost
@@ -87,7 +88,7 @@ func (d *OAuthV1) RefreshToken(accessToken, refreshToken string) (r *RefreshToke
 	}
 
 	r = new(RefreshTokenResponse)
-	hResp, err = d.Do(req, r)
+	hResp, err = d.Do(ctx, req, r)
 	return
 }
 
@@ -96,7 +97,7 @@ type LogoutTokenResponse struct {
 	Data struct{}
 }
 
-func (d *OAuthV1) LogoutToken(accessToken string) (r *LogoutTokenResponse, hResp *http.Response, err error) {
+func (d *OAuthV1) LogoutToken(ctx context.Context, accessToken string) (r *LogoutTokenResponse, hResp *http.Response, err error) {
 	var (
 		path   = "/api/v1/login/logout/"
 		method = http.MethodPost
@@ -111,7 +112,7 @@ func (d *OAuthV1) LogoutToken(accessToken string) (r *LogoutTokenResponse, hResp
 	}
 
 	r = new(LogoutTokenResponse)
-	hResp, err = d.Do(req, r)
+	hResp, err = d.Do(ctx, req, r)
 	return
 }
 
@@ -120,7 +121,7 @@ type QueryUserDetailResponse struct {
 	Data struct{}
 }
 
-func (d *OAuthV1) QueryUserDetail(openId string) (r *QueryUserDetailResponse, hResp *http.Response, err error) {
+func (d *OAuthV1) QueryUserDetail(ctx context.Context, openId string) (r *QueryUserDetailResponse, hResp *http.Response, err error) {
 	var (
 		path   = "/api/v1/user/detail/"
 		method = http.MethodPost
@@ -135,7 +136,7 @@ func (d *OAuthV1) QueryUserDetail(openId string) (r *QueryUserDetailResponse, hR
 	}
 
 	r = new(QueryUserDetailResponse)
-	hResp, err = d.Do(req, r)
+	hResp, err = d.Do(ctx, req, r)
 	return
 }
 
@@ -146,7 +147,7 @@ type PreUser2AppResponse struct {
 	}
 }
 
-func (d *OAuthV1) PreUser2App(tradeNo, coinCode, volume, scene, desc, device, state, redirectUrl string) (r *PreUser2AppResponse, hResp *http.Response, err error) {
+func (d *OAuthV1) PreUser2App(ctx context.Context, tradeNo, coinCode, volume, scene, desc, device, state, redirectUrl string) (r *PreUser2AppResponse, hResp *http.Response, err error) {
 	var (
 		path   = "/api/v1/pay/user2app/pre/"
 		method = http.MethodPost
@@ -168,7 +169,7 @@ func (d *OAuthV1) PreUser2App(tradeNo, coinCode, volume, scene, desc, device, st
 	}
 
 	r = new(PreUser2AppResponse)
-	hResp, err = d.Do(req, r)
+	hResp, err = d.Do(ctx, req, r)
 	return
 }
 
@@ -191,7 +192,7 @@ type DoApp2UserResponse struct {
 	Data *OrderDetail
 }
 
-func (d *OAuthV1) DoApp2UserByOpenId(openId, tradeNo, coinCode, volume, scene, desc, device string) (r *DoApp2UserResponse, hResp *http.Response, err error) {
+func (d *OAuthV1) DoApp2UserByOpenId(ctx context.Context, openId, tradeNo, coinCode, volume, scene, desc, device string) (r *DoApp2UserResponse, hResp *http.Response, err error) {
 	var (
 		path   = "/api/v1/pay/app2user/do/"
 		method = http.MethodPost
@@ -212,11 +213,11 @@ func (d *OAuthV1) DoApp2UserByOpenId(openId, tradeNo, coinCode, volume, scene, d
 	}
 
 	r = new(DoApp2UserResponse)
-	hResp, err = d.Do(req, r)
+	hResp, err = d.Do(ctx, req, r)
 	return
 }
 
-func (d *OAuthV1) DoApp2UserByDragonExUid(dragonExUid int64, tradeNo, coinCode, volume, scene, desc, device string) (r *DoApp2UserResponse, hResp *http.Response, err error) {
+func (d *OAuthV1) DoApp2UserByDragonExUid(ctx context.Context, dragonExUid int64, tradeNo, coinCode, volume, scene, desc, device string) (r *DoApp2UserResponse, hResp *http.Response, err error) {
 	var (
 		path   = "/api/v1/pay/app2user/do/"
 		method = http.MethodPost
@@ -237,7 +238,7 @@ func (d *OAuthV1) DoApp2UserByDragonExUid(dragonExUid int64, tradeNo, coinCode, 
 	}
 
 	r = new(DoApp2UserResponse)
-	hResp, err = d.Do(req, r)
+	hResp, err = d.Do(ctx, req, r)
 	return
 }
 
@@ -246,7 +247,7 @@ type QueryOrderDetailResponse struct {
 	Data *OrderDetail
 }
 
-func (d *OAuthV1) QueryOrderDetail(tradeNo string) (r *QueryOrderDetailResponse, hResp *http.Response, err error) {
+func (d *OAuthV1) QueryOrderDetail(ctx context.Context, tradeNo string) (r *QueryOrderDetailResponse, hResp *http.Response, err error) {
 	var (
 		path   = "/api/v1/pay/order/detail/"
 		method = http.MethodPost
@@ -261,7 +262,7 @@ func (d *OAuthV1) QueryOrderDetail(tradeNo string) (r *QueryOrderDetailResponse,
 	}
 
 	r = new(QueryOrderDetailResponse)
-	hResp, err = d.Do(req, r)
+	hResp, err = d.Do(ctx, req, r)
 	return
 }
 
@@ -273,7 +274,7 @@ type ListOrdersResponse struct {
 	}
 }
 
-func (d *OAuthV1) ListOrdersByDragonExUid(dragonExUid int64, coinCode string, direction, startTime, endTime, offset, limit int64) (r *ListOrdersResponse, hResp *http.Response, err error) {
+func (d *OAuthV1) ListOrdersByDragonExUid(ctx context.Context, dragonExUid int64, coinCode string, direction, startTime, endTime, offset, limit int64) (r *ListOrdersResponse, hResp *http.Response, err error) {
 	var (
 		path   = "/api/v1/pay/order/history/"
 		method = http.MethodPost
@@ -294,7 +295,7 @@ func (d *OAuthV1) ListOrdersByDragonExUid(dragonExUid int64, coinCode string, di
 	}
 
 	r = new(ListOrdersResponse)
-	hResp, err = d.Do(req, r)
+	hResp, err = d.Do(ctx, req, r)
 	return
 }
 
@@ -303,7 +304,7 @@ type RedoPayCallbackResponse struct {
 	Data struct{}
 }
 
-func (d *OAuthV1) RedoPayCallback(tradeNo string) (r *RedoPayCallbackResponse, hResp *http.Response, err error) {
+func (d *OAuthV1) RedoPayCallback(ctx context.Context, tradeNo string) (r *RedoPayCallbackResponse, hResp *http.Response, err error) {
 	var (
 		path   = "/api/v1/pay/callback/redo/"
 		method = http.MethodPost
@@ -318,7 +319,7 @@ func (d *OAuthV1) RedoPayCallback(tradeNo string) (r *RedoPayCallbackResponse, h
 	}
 
 	r = new(RedoPayCallbackResponse)
-	hResp, err = d.Do(req, r)
+	hResp, err = d.Do(ctx, req, r)
 	return
 }
 
@@ -335,7 +336,7 @@ type ListUserCoinsResponse struct {
 	Data []*UserCoinDetail
 }
 
-func (d *OAuthV1) listUserCoins(openId string, dragonExUid int64) (r *ListUserCoinsResponse, hResp *http.Response, err error) {
+func (d *OAuthV1) listUserCoins(ctx context.Context, openId string, dragonExUid int64) (r *ListUserCoinsResponse, hResp *http.Response, err error) {
 	var (
 		path   = "/api/v1/user/coin/list/"
 		method = http.MethodPost
@@ -351,16 +352,16 @@ func (d *OAuthV1) listUserCoins(openId string, dragonExUid int64) (r *ListUserCo
 	}
 
 	r = new(ListUserCoinsResponse)
-	hResp, err = d.Do(req, r)
+	hResp, err = d.Do(ctx, req, r)
 	return
 }
 
-func (d *OAuthV1) ListUserCoinsByOpenId(openId string) (r *ListUserCoinsResponse, hResp *http.Response, err error) {
-	return d.listUserCoins(openId, 0)
+func (d *OAuthV1) ListUserCoinsByOpenId(ctx context.Context, openId string) (r *ListUserCoinsResponse, hResp *http.Response, err error) {
+	return d.listUserCoins(ctx, openId, 0)
 }
 
-func (d *OAuthV1) ListUserCoinsByDragonExUid(dragonExUid int64) (r *ListUserCoinsResponse, hResp *http.Response, err error) {
-	return d.listUserCoins("", dragonExUid)
+func (d *OAuthV1) ListUserCoinsByDragonExUid(ctx context.Context, dragonExUid int64) (r *ListUserCoinsResponse, hResp *http.Response, err error) {
+	return d.listUserCoins(ctx, "", dragonExUid)
 }
 
 type QueryUserCoinResponse struct {
@@ -368,7 +369,7 @@ type QueryUserCoinResponse struct {
 	Data *UserCoinDetail
 }
 
-func (d *OAuthV1) queryUserCoin(openId string, dragonExUid, CoinId int64, coinCode string) (r *QueryUserCoinResponse, hResp *http.Response, err error) {
+func (d *OAuthV1) queryUserCoin(ctx context.Context, openId string, dragonExUid, CoinId int64, coinCode string) (r *QueryUserCoinResponse, hResp *http.Response, err error) {
 	var (
 		path   = "/api/v1/user/coin/detail/"
 		method = http.MethodPost
@@ -386,22 +387,22 @@ func (d *OAuthV1) queryUserCoin(openId string, dragonExUid, CoinId int64, coinCo
 	}
 
 	r = new(QueryUserCoinResponse)
-	hResp, err = d.Do(req, r)
+	hResp, err = d.Do(ctx, req, r)
 	return
 }
 
-func (d *OAuthV1) QueryUserCoinByOpenIdCoinId(openId string, CoinId int64) (r *QueryUserCoinResponse, hResp *http.Response, err error) {
-	return d.queryUserCoin(openId, 0, CoinId, "")
+func (d *OAuthV1) QueryUserCoinByOpenIdCoinId(ctx context.Context, openId string, CoinId int64) (r *QueryUserCoinResponse, hResp *http.Response, err error) {
+	return d.queryUserCoin(ctx, openId, 0, CoinId, "")
 }
 
-func (d *OAuthV1) QueryUserCoinByOpenIdCoinCode(openId, CoinCode string) (r *QueryUserCoinResponse, hResp *http.Response, err error) {
-	return d.queryUserCoin(openId, 0, 0, CoinCode)
+func (d *OAuthV1) QueryUserCoinByOpenIdCoinCode(ctx context.Context, openId, CoinCode string) (r *QueryUserCoinResponse, hResp *http.Response, err error) {
+	return d.queryUserCoin(ctx, openId, 0, 0, CoinCode)
 }
 
-func (d *OAuthV1) QueryUserCoinByDragonExUidCoinId(dragonExUid, CoinId int64) (r *QueryUserCoinResponse, hResp *http.Response, err error) {
-	return d.queryUserCoin("", dragonExUid, CoinId, "")
+func (d *OAuthV1) QueryUserCoinByDragonExUidCoinId(ctx context.Context, dragonExUid, CoinId int64) (r *QueryUserCoinResponse, hResp *http.Response, err error) {
+	return d.queryUserCoin(ctx, "", dragonExUid, CoinId, "")
 }
 
-func (d *OAuthV1) QueryUserCoinByDragonExUidCoinCode(dragonExUid int64, CoinCode string) (r *QueryUserCoinResponse, hResp *http.Response, err error) {
-	return d.queryUserCoin("", dragonExUid, 0, CoinCode)
+func (d *OAuthV1) QueryUserCoinByDragonExUidCoinCode(ctx context.Context, dragonExUid int64, CoinCode string) (r *QueryUserCoinResponse, hResp *http.Response, err error) {
+	return d.queryUserCoin(ctx, "", dragonExUid, 0, CoinCode)
 }

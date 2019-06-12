@@ -2,6 +2,7 @@ package oauthgo
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -11,9 +12,9 @@ import (
 	"time"
 )
 
-type BeforeHandler func(oauth OAuth, req *http.Request) (err error)
+type BeforeHandler func(ctx context.Context, oauth OAuth, req *http.Request) (err error)
 
-type AfterHandler func(oauth OAuth, req *http.Request, resp *http.Response) (err error)
+type AfterHandler func(ctx context.Context, oauth OAuth, req *http.Request, resp *http.Response) (err error)
 
 type OAuth interface {
 	// return AppId
@@ -35,7 +36,7 @@ type OAuth interface {
 	NewRequest(method, url string, values map[string]interface{}, header http.Header) (req *http.Request, err error)
 
 	// do http request
-	Do(req *http.Request, i interface{}) (hResp *http.Response, err error)
+	Do(ctx context.Context, req *http.Request, i interface{}) (hResp *http.Response, err error)
 
 	// add middleware before doing request
 	Before(handlers ...BeforeHandler)
@@ -111,7 +112,7 @@ func (oauth *DefaultOAuth) NewRequest(method, path string, values map[string]int
 	}
 }
 
-func (oauth *DefaultOAuth) Do(req *http.Request, i interface{}) (hResp *http.Response, err error) {
+func (oauth *DefaultOAuth) Do(ctx context.Context, req *http.Request, i interface{}) (hResp *http.Response, err error) {
 	// do something before doing request
 	reqBodyByte, err := ioutil.ReadAll(req.Body)
 	if err != nil {
@@ -123,7 +124,7 @@ func (oauth *DefaultOAuth) Do(req *http.Request, i interface{}) (hResp *http.Res
 	}()
 
 	for _, handler := range oauth.beforeHandlers {
-		err = handler(oauth, req)
+		err = handler(ctx, oauth, req)
 		if err != nil {
 			return
 		}
@@ -150,7 +151,7 @@ func (oauth *DefaultOAuth) Do(req *http.Request, i interface{}) (hResp *http.Res
 
 	// do something after doing request
 	for _, handler := range oauth.afterHandlers {
-		err = handler(oauth, req, hResp)
+		err = handler(ctx, oauth, req, hResp)
 		if err != nil {
 			return
 		}
