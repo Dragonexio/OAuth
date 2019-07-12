@@ -87,8 +87,9 @@ func TestOAuthV1_PreUser2App(t *testing.T) {
 		coinCode    = "usdt"
 		volume      = "0.1"
 		redirectUrl = "https://www.google.com"
+		domain      = "dragonex.io"
 	)
-	resp, _, err := apiV1.PreUser2App(context.Background(), tradeNo, coinCode, volume, scene, desc, device, state, redirectUrl)
+	resp, _, err := apiV1.PreUser2App(context.Background(), tradeNo, coinCode, volume, scene, desc, device, state, redirectUrl, domain)
 
 	assert.Equal(t, nil, err)
 	assert.Equal(t, true, resp.Ok)

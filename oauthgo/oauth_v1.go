@@ -147,7 +147,7 @@ type PreUser2AppResponse struct {
 	}
 }
 
-func (d *OAuthV1) PreUser2App(ctx context.Context, tradeNo, coinCode, volume, scene, desc, device, state, redirectUrl string) (r *PreUser2AppResponse, hResp *http.Response, err error) {
+func (d *OAuthV1) PreUser2App(ctx context.Context, tradeNo, coinCode, volume, scene, desc, device, state, redirectUrl, domain string) (r *PreUser2AppResponse, hResp *http.Response, err error) {
 	var (
 		path   = "/api/v1/pay/user2app/pre/"
 		method = http.MethodPost
@@ -160,6 +160,7 @@ func (d *OAuthV1) PreUser2App(ctx context.Context, tradeNo, coinCode, volume, sc
 			"device":       device,
 			"state":        state,
 			"redirect_url": redirectUrl,
+			"domain":       domain,
 		}
 		headers = http.Header{}
 	)
