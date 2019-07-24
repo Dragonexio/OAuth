@@ -30,6 +30,7 @@ type DoLoginResponse struct {
 		OpenId                 string `json:"open_id"`
 		UnionId                string `json:"union_id"`
 		Scopes                 []int  `json:"scopes"`
+		PayToken               string `json:"pay_token"`
 	}
 }
 
@@ -69,6 +70,7 @@ type RefreshTokenResponse struct {
 		RefreshToken           string `json:"refresh_token"`
 		RefreshTokenExpireTime int64  `json:"refresh_token_et"`
 		Scopes                 []int  `json:"scopes"`
+		PayToken               string `json:"pay_token"`
 	}
 }
 
@@ -147,20 +149,21 @@ type PreUser2AppResponse struct {
 	}
 }
 
-func (d *OAuthV1) PreUser2App(ctx context.Context, tradeNo, coinCode, volume, scene, desc, device, state, redirectUrl, domain string) (r *PreUser2AppResponse, hResp *http.Response, err error) {
+func (d *OAuthV1) PreUser2App(ctx context.Context, tradeNo, coinCode, volume, scene, desc, device, state, redirectUrl, domain string, specifyDragonExUid int) (r *PreUser2AppResponse, hResp *http.Response, err error) {
 	var (
 		path   = "/api/v1/pay/user2app/pre/"
 		method = http.MethodPost
 		values = map[string]interface{}{
-			"trade_no":     tradeNo,
-			"coin_code":    coinCode,
-			"volume":       volume,
-			"scene":        scene,
-			"desc":         desc,
-			"device":       device,
-			"state":        state,
-			"redirect_url": redirectUrl,
-			"domain":       domain,
+			"trade_no":             tradeNo,
+			"coin_code":            coinCode,
+			"volume":               volume,
+			"scene":                scene,
+			"desc":                 desc,
+			"device":               device,
+			"state":                state,
+			"redirect_url":         redirectUrl,
+			"domain":               domain,
+			"specify_dragonex_uid": specifyDragonExUid,
 		}
 		headers = http.Header{}
 	)
@@ -186,6 +189,7 @@ type OrderDetail struct {
 	CutVolume   decimal.Decimal `json:"cut_volume"`
 	ArriveTime  int64           `json:"arrive_time"`
 	CreateTime  int64           `json:"create_time"`
+	OrderType   int             `json:"order_type"`
 }
 
 type DoApp2UserResponse struct {
@@ -193,11 +197,12 @@ type DoApp2UserResponse struct {
 	Data *OrderDetail
 }
 
-func (d *OAuthV1) DoApp2UserByOpenId(ctx context.Context, openId, tradeNo, coinCode, volume, scene, desc, device string) (r *DoApp2UserResponse, hResp *http.Response, err error) {
+func (d *OAuthV1) doApp2UserByOpenIdOrDragonExUid(ctx context.Context, openId, tradeNo, coinCode, volume, scene, desc, device string, dragonExUid int64) (r *DoApp2UserResponse, hResp *http.Response, err error) {
 	var (
 		path   = "/api/v1/pay/app2user/do/"
 		method = http.MethodPost
 		values = map[string]interface{}{
+			"uid":       dragonExUid,
 			"open_id":   openId,
 			"trade_no":  tradeNo,
 			"coin_code": coinCode,
@@ -218,12 +223,21 @@ func (d *OAuthV1) DoApp2UserByOpenId(ctx context.Context, openId, tradeNo, coinC
 	return
 }
 
+func (d *OAuthV1) DoApp2UserByOpenId(ctx context.Context, openId, tradeNo, coinCode, volume, scene, desc, device string) (r *DoApp2UserResponse, hResp *http.Response, err error) {
+	return d.doApp2UserByOpenIdOrDragonExUid(ctx, openId, tradeNo, coinCode, volume, scene, desc, device, 0)
+}
+
 func (d *OAuthV1) DoApp2UserByDragonExUid(ctx context.Context, dragonExUid int64, tradeNo, coinCode, volume, scene, desc, device string) (r *DoApp2UserResponse, hResp *http.Response, err error) {
+	return d.doApp2UserByOpenIdOrDragonExUid(ctx, "", tradeNo, coinCode, volume, scene, desc, device, dragonExUid)
+}
+
+func (d *OAuthV1) openDoApp2UserByOpenIdOrDragonExUid(ctx context.Context, openId, tradeNo, coinCode, volume, scene, desc, device string, dragonExUid int64) (r *DoApp2UserResponse, hResp *http.Response, err error) {
 	var (
-		path   = "/api/v1/pay/app2user/do/"
+		path   = "/api/v1/open/pay/app2user/do/"
 		method = http.MethodPost
 		values = map[string]interface{}{
 			"uid":       dragonExUid,
+			"open_id":   openId,
 			"trade_no":  tradeNo,
 			"coin_code": coinCode,
 			"volume":    volume,
@@ -241,6 +255,49 @@ func (d *OAuthV1) DoApp2UserByDragonExUid(ctx context.Context, dragonExUid int64
 	r = new(DoApp2UserResponse)
 	hResp, err = d.Do(ctx, req, r)
 	return
+}
+
+func (d *OAuthV1) OpenDoApp2UserByOpenId(ctx context.Context, openId, tradeNo, coinCode, volume, scene, desc, device string) (r *DoApp2UserResponse, hResp *http.Response, err error) {
+	return d.openDoApp2UserByOpenIdOrDragonExUid(ctx, openId, tradeNo, coinCode, volume, scene, desc, device, 0)
+}
+
+func (d *OAuthV1) OpenDoApp2UserByDragonExUid(ctx context.Context, dragonExUid int64, tradeNo, coinCode, volume, scene, desc, device string) (r *DoApp2UserResponse, hResp *http.Response, err error) {
+	return d.openDoApp2UserByOpenIdOrDragonExUid(ctx, "", tradeNo, coinCode, volume, scene, desc, device, dragonExUid)
+}
+
+func (d *OAuthV1) openDoUser2AppByOpenIdOrDragonExUid(ctx context.Context, openId, tradeNo, coinCode, volume, scene, desc, device, payToken string, dragonExUid int64) (r *DoApp2UserResponse, hResp *http.Response, err error) {
+	var (
+		path   = "/api/v1/open/pay/user2app/do/"
+		method = http.MethodPost
+		values = map[string]interface{}{
+			"uid":       dragonExUid,
+			"open_id":   openId,
+			"trade_no":  tradeNo,
+			"coin_code": coinCode,
+			"volume":    volume,
+			"scene":     scene,
+			"desc":      desc,
+			"device":    device,
+			"pay_token": payToken,
+		}
+		headers = http.Header{}
+	)
+	req, err := d.NewRequest(method, path, values, headers)
+	if err != nil {
+		return
+	}
+
+	r = new(DoApp2UserResponse)
+	hResp, err = d.Do(ctx, req, r)
+	return
+}
+
+func (d *OAuthV1) OpenDoUser2AppByOpenId(ctx context.Context, openId, tradeNo, coinCode, volume, scene, desc, device, payToken string) (r *DoApp2UserResponse, hResp *http.Response, err error) {
+	return d.openDoUser2AppByOpenIdOrDragonExUid(ctx, openId, tradeNo, coinCode, volume, scene, desc, device, payToken, 0)
+}
+
+func (d *OAuthV1) OpenDoUser2AppByDragonExUid(ctx context.Context, dragonExUid int64, tradeNo, coinCode, volume, scene, desc, device, payToken string) (r *DoApp2UserResponse, hResp *http.Response, err error) {
+	return d.openDoUser2AppByOpenIdOrDragonExUid(ctx, "", tradeNo, coinCode, volume, scene, desc, device, payToken, dragonExUid)
 }
 
 type QueryOrderDetailResponse struct {
@@ -275,7 +332,7 @@ type ListOrdersResponse struct {
 	}
 }
 
-func (d *OAuthV1) ListOrdersByDragonExUid(ctx context.Context, dragonExUid int64, coinCode string, direction, startTime, endTime, offset, limit int64) (r *ListOrdersResponse, hResp *http.Response, err error) {
+func (d *OAuthV1) ListOrdersByDragonExUid(ctx context.Context, dragonExUid int64, coinCode string, direction, startTime, endTime, orderType, offset, limit int64) (r *ListOrdersResponse, hResp *http.Response, err error) {
 	var (
 		path   = "/api/v1/pay/order/history/"
 		method = http.MethodPost
@@ -285,6 +342,7 @@ func (d *OAuthV1) ListOrdersByDragonExUid(ctx context.Context, dragonExUid int64
 			"direction":  direction,
 			"start_time": startTime,
 			"end_time":   endTime,
+			"order_type": orderType,
 			"offset":     offset,
 			"limit":      limit,
 		}
@@ -365,6 +423,34 @@ func (d *OAuthV1) ListUserCoinsByDragonExUid(ctx context.Context, dragonExUid in
 	return d.listUserCoins(ctx, "", dragonExUid)
 }
 
+func (d *OAuthV1) listUserOpenCoins(ctx context.Context, openId string, dragonExUid int64) (r *ListUserCoinsResponse, hResp *http.Response, err error) {
+	var (
+		path   = "/api/v1/open/user/coin/list/"
+		method = http.MethodPost
+		values = map[string]interface{}{
+			"open_id":      openId,
+			"dragonex_uid": dragonExUid,
+		}
+		headers = http.Header{}
+	)
+	req, err := d.NewRequest(method, path, values, headers)
+	if err != nil {
+		return
+	}
+
+	r = new(ListUserCoinsResponse)
+	hResp, err = d.Do(ctx, req, r)
+	return
+}
+
+func (d *OAuthV1) ListUserOpenCoinsByOpenId(ctx context.Context, openId string) (r *ListUserCoinsResponse, hResp *http.Response, err error) {
+	return d.listUserOpenCoins(ctx, openId, 0)
+}
+
+func (d *OAuthV1) ListUserOpenCoinsByDragonExUid(ctx context.Context, dragonExUid int64) (r *ListUserCoinsResponse, hResp *http.Response, err error) {
+	return d.listUserOpenCoins(ctx, "", dragonExUid)
+}
+
 type QueryUserCoinResponse struct {
 	BaseResponse
 	Data *UserCoinDetail
@@ -406,4 +492,42 @@ func (d *OAuthV1) QueryUserCoinByDragonExUidCoinId(ctx context.Context, dragonEx
 
 func (d *OAuthV1) QueryUserCoinByDragonExUidCoinCode(ctx context.Context, dragonExUid int64, CoinCode string) (r *QueryUserCoinResponse, hResp *http.Response, err error) {
 	return d.queryUserCoin(ctx, "", dragonExUid, 0, CoinCode)
+}
+
+func (d *OAuthV1) queryUserOpenCoin(ctx context.Context, openId string, dragonExUid, CoinId int64, coinCode string) (r *QueryUserCoinResponse, hResp *http.Response, err error) {
+	var (
+		path   = "/api/v1/open/user/coin/detail/"
+		method = http.MethodPost
+		values = map[string]interface{}{
+			"open_id":      openId,
+			"dragonex_uid": dragonExUid,
+			"coin_id":      CoinId,
+			"coin_code":    coinCode,
+		}
+		headers = http.Header{}
+	)
+	req, err := d.NewRequest(method, path, values, headers)
+	if err != nil {
+		return
+	}
+
+	r = new(QueryUserCoinResponse)
+	hResp, err = d.Do(ctx, req, r)
+	return
+}
+
+func (d *OAuthV1) QueryUserOpenCoinByOpenIdCoinId(ctx context.Context, openId string, CoinId int64) (r *QueryUserCoinResponse, hResp *http.Response, err error) {
+	return d.queryUserOpenCoin(ctx, openId, 0, CoinId, "")
+}
+
+func (d *OAuthV1) QueryUserOpenCoinByOpenIdCoinCode(ctx context.Context, openId, CoinCode string) (r *QueryUserCoinResponse, hResp *http.Response, err error) {
+	return d.queryUserOpenCoin(ctx, openId, 0, 0, CoinCode)
+}
+
+func (d *OAuthV1) QueryUserOpenCoinByDragonExUidCoinId(ctx context.Context, dragonExUid, CoinId int64) (r *QueryUserCoinResponse, hResp *http.Response, err error) {
+	return d.queryUserOpenCoin(ctx, "", dragonExUid, CoinId, "")
+}
+
+func (d *OAuthV1) QueryUserOpenCoinByDragonExUidCoinCode(ctx context.Context, dragonExUid int64, CoinCode string) (r *QueryUserCoinResponse, hResp *http.Response, err error) {
+	return d.queryUserOpenCoin(ctx, "", dragonExUid, 0, CoinCode)
 }

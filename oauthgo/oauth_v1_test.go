@@ -19,8 +19,8 @@ func TestMain(m *testing.M) {
 	const (
 		appId     = "appidfortest"
 		host      = "https://oauth.dragonex.io"
-		accessKey = "87079e4662685c40a884baa744f571b4"
-		secretKey = "a24d0648e60a5c7a9d250137c472d8f4"
+		accessKey = "6b7ef684a6645325ae1505d5636cfb12"
+		secretKey = "2721a56546de5baf9cfc4b5ceb3cc59f"
 		signKey   = "testKey"
 	)
 
@@ -41,7 +41,7 @@ const (
 
 func TestOAuthV1_DoLogin(t *testing.T) {
 	var (
-		code   = "f38f095c79"
+		code   = "85b1aa3ef4"
 		scopes = []int{ScopeLogin}
 	)
 	resp, _, err := apiV1.DoLogin(context.Background(), code, state, device, scopes)
@@ -52,8 +52,8 @@ func TestOAuthV1_DoLogin(t *testing.T) {
 
 func TestOAuthV1_RefreshToken(t *testing.T) {
 	var (
-		accessToken  = "3d6524isnEAoGBx5p3Z0C/3IBXesM7biMwDZKkvhj6lsXgWAb6VSlr/433k6q0hX8IG1WXFvyiZP9TBdMNm7Zwq2WdGdZ3ntdVCqBw4bZI5PMsRsN/L+aR7813rnfCKJA6GQrhlLsZV5l6hRbM/4G/4h1cI/04V9BYmd/9fKMijz0y1v2OCcx4Ge7xe8vwxMj+4JpbWIedbWPWFoZV10oLeHaQm+K51rMJ8Onxnid60="
-		refreshToken = "6WKXRHI6IkpXVCJ96eyJvIjoiNTk5OTFjMGUzNTg1NWE0OGJiMTE1NzI5NWRkNjNjZTQiLCJhIjoiYXBwaWRmb3J0ZXN0IiwiZXhwIjoxNTU2MjY0ODY1LCJuYmYiOjE1NTU2NjAwNjV96TEVzAoAGhJGo94h5BqDDcd7AMkA28EZLpPkneWYn1G4"
+		accessToken  = "3d6524isnEAoGBx5p3Z0C/3IBXesM7biMwDZKkvhj6lsXgWAb6VSlr/433k6q0hX8IG1WXFvyiZP9TBdMNm7Zwq2WdGdZ3ntdVCqBw4bZI5PMsRsN/L+aR7813rnfCKJA6GQrhlLsZV5l6hRbM/4G0Mmz0m8l+Bs9aAEtXvZ8viyDsUOGO2t5x7k4m7G61Db1CTaCsB+ig0MADb1ssiPY+F4mrTm0p+LR81l8b0aLSA="
+		refreshToken = "wRNoiNTk5OTFjMGUzNTg1NWE0OGJiMTE1NzI5NWRkNjNjZTQiLCJhIjoiYXBwaWRmb3J0ZXN0IiwiZXhwIjoxNTY0NTY3NTAyLCJuYmYiOjE1NjM5NjI3MDJ9tbREEzHLsbfMx5GEpMdAyoan4-47_FgIaeHkegSJ_pQM"
 	)
 	resp, _, err := apiV1.RefreshToken(context.Background(), accessToken, refreshToken)
 
@@ -83,13 +83,14 @@ func TestOAuthV1_QueryUserDetail(t *testing.T) {
 
 func TestOAuthV1_PreUser2App(t *testing.T) {
 	var (
-		tradeNo     = fmt.Sprint(time.Now().Unix())
-		coinCode    = "usdt"
-		volume      = "0.1"
-		redirectUrl = "https://www.google.com"
-		domain      = "dragonex.io"
+		tradeNo            = fmt.Sprint(time.Now().Unix())
+		coinCode           = "usdt"
+		volume             = "0.1"
+		redirectUrl        = "https://www.google.com"
+		domain             = "dragonex.io"
+		specifyDragonExUid = 0
 	)
-	resp, _, err := apiV1.PreUser2App(context.Background(), tradeNo, coinCode, volume, scene, desc, device, state, redirectUrl, domain)
+	resp, _, err := apiV1.PreUser2App(context.Background(), tradeNo, coinCode, volume, scene, desc, device, state, redirectUrl, domain, specifyDragonExUid)
 
 	assert.Equal(t, nil, err)
 	assert.Equal(t, true, resp.Ok)
@@ -97,7 +98,7 @@ func TestOAuthV1_PreUser2App(t *testing.T) {
 
 func TestOAuthV1_DoApp2UserByOpenId(t *testing.T) {
 	var (
-		openId   = "9b442f4561905244a02f1cbc4bd4db5c"
+		openId   = "59991c0e35855a48bb1157295dd63ce4"
 		tradeNo  = fmt.Sprint(time.Now().Unix())
 		coinCode = "usdt"
 		volume   = "0.1"
@@ -121,9 +122,63 @@ func TestOAuthV1_DoApp2UserByDragonExUid(t *testing.T) {
 	assert.Equal(t, true, resp.Ok)
 }
 
+func TestOAuthV1_OpenDoUser2AppByOpenId(t *testing.T) {
+	var (
+		openId   = "59991c0e35855a48bb1157295dd63ce4"
+		tradeNo  = fmt.Sprint(time.Now().Unix())
+		coinCode = "usdt"
+		volume   = "0.1"
+		payToken = "AimJY="
+	)
+	resp, _, err := apiV1.OpenDoUser2AppByOpenId(context.Background(), openId, tradeNo, coinCode, volume, scene, desc, device, payToken)
+
+	assert.Equal(t, nil, err)
+	assert.Equal(t, true, resp.Ok)
+}
+
+func TestOAuthV1_OpenDoUser2AppByDragonExUid(t *testing.T) {
+	var (
+		dragonExUid int64 = 1000000
+		tradeNo           = fmt.Sprint(time.Now().Unix())
+		coinCode          = "usdt"
+		volume            = "0.1"
+		payToken          = "AimJY="
+	)
+	resp, _, err := apiV1.OpenDoUser2AppByDragonExUid(context.Background(), dragonExUid, tradeNo, coinCode, volume, scene, desc, device, payToken)
+
+	assert.Equal(t, nil, err)
+	assert.Equal(t, true, resp.Ok)
+}
+
+func TestOAuthV1_OpenDoApp2UserByOpenId(t *testing.T) {
+	var (
+		openId   = "59991c0e35855a48bb1157295dd63ce4"
+		tradeNo  = fmt.Sprint(time.Now().Unix())
+		coinCode = "usdt"
+		volume   = "0.1"
+	)
+	resp, _, err := apiV1.OpenDoApp2UserByOpenId(context.Background(), openId, tradeNo, coinCode, volume, scene, desc, device)
+
+	assert.Equal(t, nil, err)
+	assert.Equal(t, true, resp.Ok)
+}
+
+func TestOAuthV1_OpenDoApp2UserByDragonExUid(t *testing.T) {
+	var (
+		dragonExUid int64 = 1000000
+		tradeNo           = fmt.Sprint(time.Now().Unix())
+		coinCode          = "usdt"
+		volume            = "0.1"
+	)
+	resp, _, err := apiV1.OpenDoApp2UserByDragonExUid(context.Background(), dragonExUid, tradeNo, coinCode, volume, scene, desc, device)
+
+	assert.Equal(t, nil, err)
+	assert.Equal(t, true, resp.Ok)
+}
+
 func TestOAuthV1_QueryOrderDetail(t *testing.T) {
 	var (
-		tradeNo = ""
+		tradeNo = "1563964208"
 	)
 	resp, _, err := apiV1.QueryOrderDetail(context.Background(), tradeNo)
 
@@ -138,10 +193,11 @@ func TestOAuthV1_ListOrders(t *testing.T) {
 		direction   int64 = 0
 		startTime   int64 = 0
 		endTime     int64 = 0
+		orderType   int64 = 1
 		offset      int64 = 0
 		limit       int64 = 10
 	)
-	resp, _, err := apiV1.ListOrdersByDragonExUid(context.Background(), dragonExUid, coinCode, direction, startTime, endTime, offset, limit)
+	resp, _, err := apiV1.ListOrdersByDragonExUid(context.Background(), dragonExUid, coinCode, direction, startTime, endTime, orderType, offset, limit)
 
 	assert.Equal(t, nil, err)
 	assert.Equal(t, true, resp.Ok)
@@ -149,7 +205,7 @@ func TestOAuthV1_ListOrders(t *testing.T) {
 
 func TestOAuthV1_RedoPayCallback(t *testing.T) {
 	var (
-		tradeNo = ""
+		tradeNo = "1563964208"
 	)
 	resp, _, err := apiV1.RedoPayCallback(context.Background(), tradeNo)
 

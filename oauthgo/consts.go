@@ -25,3 +25,11 @@ const (
 	OrderStatusFailed       = 2
 	OrderStatusTransferring = 3
 )
+
+// order type
+const (
+	OrderTypeCoin2Coin = 1
+	OrderTypeCoin2Open = 2
+	OrderTypeOpen2Open = 3
+	OrderTypeOpen2Coin = 4
+)
