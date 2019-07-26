@@ -8,7 +8,7 @@ node [
     shape=record
 ];
 
-LoginApis [
+PaymentApis [
     label = "支付相关接口或页面
     |
     {
@@ -31,15 +31,15 @@ LoginApis [
         {
             { 币币账户相关 |
                 {
-                  /api/v1/user/coin/list/ \l 查询用户币币账号资产列表 \r
-                  | /api/v1/user/coin/detail/ \l 查询用户币币账号单项资产 \r
+                  /api/v1/user/coin/list/ \l 查询用户币币账户资产列表 \r
+                  | /api/v1/user/coin/detail/ \l 查询用户币币账户单项资产 \r
                 }
             }
             |
             { 开放账户相关 |
                 {
-                  /api/v1/open/user/coin/list/ \l 查询用户开放账号资产列表 \r
-                  | /api/v1/open/user/coin/detail/ \l 查询用户开放账号单项资产 \r
+                  /api/v1/open/user/coin/list/ \l 查询用户开放账户资产列表 \r
+                  | /api/v1/open/user/coin/detail/ \l 查询用户开放账户单项资产 \r
                 }
             }
         }            
@@ -50,8 +50,8 @@ LoginApis [
         {
             { 币币账户相关 |
                 {
-                  /api/v1/user/coin/list/ \l 查询用户币币账号资产列表 \r
-                  | /api/v1/user/coin/detail/ \l 查询用户币币账号单项资产 \r
+                  /api/v1/user/coin/list/ \l 查询用户币币账户资产列表 \r
+                  | /api/v1/user/coin/detail/ \l 查询用户币币账户单项资产 \r
                   | /api/v1/pay/user2app/pre/ \l 申请支付（用户向接入方支付）\r
                   | /api/v1/pay/app2user/do/ \l 从接入方转账给用户\r
                 }
@@ -59,10 +59,12 @@ LoginApis [
             |
             { 开放账户相关 |
                 {
-                  /api/v1/open/user/coin/list/ \l 查询用户开放账号资产列表 \r
-                  | /api/v1/open/user/coin/detail/ \l 查询用户开放账号单项资产 \r
+                  /api/v1/open/user/coin/list/ \l 查询用户开放账户资产列表 \r
                   | /api/v1/open/pay/user2app/do/ \l 开放账户从用户向接入方支付 \r
                   | /api/v1/open/pay/app2user/do/ \l 开放账户从接入方向用户支付 \r
+                  | /api/v1/open/user/coin/detail/ \l 查询用户开放账户单项资产 \r
+                  | /api/v1/open/admin/coin/list/ \l 查询App管理员开放账户资产列表 \r
+                  | /api/v1/open/admin/coin/detail/ \l 查询App管理员开放账户单项资产 \r
                 }
             }
             |
