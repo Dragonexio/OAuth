@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
-	"github.com/pkg/errors"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -108,62 +108,60 @@ func (oauth *DefaultOAuth) NewRequest(method, path string, values map[string]int
 		return oauth.makePostRequest(path, values, header)
 
 	default:
-		return req, errors.WithStack(ErrNotSupportMethod)
+		return req, ErrNotSupportMethod
 	}
 }
 
 func (oauth *DefaultOAuth) Do(ctx context.Context, req *http.Request, i interface{}) (hResp *http.Response, err error) {
-	// do something before doing request
-	reqBodyByte, err := ioutil.ReadAll(req.Body)
-	if err != nil {
-		return hResp, errors.WithStack(err)
+	var reqBodyByte []byte
+	if req.Body != nil {
+		reqBodyByte, err = ioutil.ReadAll(req.Body)
+		if err != nil {
+			return hResp, err
+		}
 	}
 	req.Body = ioutil.NopCloser(bytes.NewBuffer(reqBodyByte))
-	defer func() {
-		req.Body = ioutil.NopCloser(bytes.NewBuffer(reqBodyByte))
-	}()
 
+	// do something before doing request
 	for _, handler := range oauth.beforeHandlers {
 		err = handler(ctx, oauth, req)
 		if err != nil {
-			return hResp, errors.WithStack(err)
+			return hResp, err
 		}
 	}
 
+	// do request
 	client := http.Client{}
 	hResp, err = client.Do(req)
 	req.Body = ioutil.NopCloser(bytes.NewBuffer(reqBodyByte))
 	if err != nil {
-		return hResp, errors.WithStack(err)
+		return hResp, err
 	}
 	defer func() {
 		_ = hResp.Body.Close()
-	}()
-
-	body, err := ioutil.ReadAll(hResp.Body)
-	if err != nil {
-		return hResp, errors.WithStack(err)
-	}
-	hResp.Body = ioutil.NopCloser(bytes.NewBuffer(body))
-	defer func() {
-		hResp.Body = ioutil.NopCloser(bytes.NewBuffer(body))
 	}()
 
 	// do something after doing request
 	for _, handler := range oauth.afterHandlers {
 		err = handler(ctx, oauth, req, hResp)
 		if err != nil {
-			return hResp, errors.WithStack(err)
+			return hResp, err
 		}
 	}
 
 	if hResp.StatusCode != http.StatusOK {
-		return hResp, errors.WithStack(ErrNot200StatusCode)
+		return hResp, ErrNot200StatusCode
 	}
+
+	body, err := ioutil.ReadAll(hResp.Body)
+	if err != nil {
+		return hResp, err
+	}
+	hResp.Body = ioutil.NopCloser(bytes.NewBuffer(body))
 
 	err = json.Unmarshal(body, i)
 	if err != nil {
-		return hResp, errors.WithStack(err)
+		return hResp, err
 	}
 
 	return
@@ -200,7 +198,7 @@ func (oauth *DefaultOAuth) makeGetRequest(path string, values map[string]interfa
 	reqUrl := fmt.Sprintf("%s%s?%s", oauth.host, path, strings.Join(valuesStringSlice, "&"))
 	req, err = http.NewRequest(method, reqUrl, nil)
 	if err != nil {
-		return req, errors.WithStack(err)
+		return req, err
 	}
 
 	for k, v := range header {
@@ -219,12 +217,12 @@ func (oauth *DefaultOAuth) makePostRequest(path string, values map[string]interf
 
 	bodyByte, err := json.Marshal(values)
 	if err != nil {
-		return req, errors.WithStack(err)
+		return req, err
 	}
 
 	req, err = http.NewRequest(method, reqUrl, strings.NewReader(string(bodyByte)))
 	if err != nil {
-		return req, errors.WithStack(err)
+		return req, err
 	}
 
 	req.Header.Add(HeaderDate, time.Now().UTC().Format(GmtFormat))
@@ -233,7 +231,7 @@ func (oauth *DefaultOAuth) makePostRequest(path string, values map[string]interf
 
 	sign, err := sign(method, path, req.Header, oauth.secretKey)
 	if err != nil {
-		return req, errors.WithStack(err)
+		return req, err
 	}
 	auth := fmt.Sprintf("%s:%s", oauth.accessKey, sign)
 	req.Header.Add(HeaderAuth, auth)

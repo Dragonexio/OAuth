@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"context"
 	"crypto/md5"
+	"errors"
 	"fmt"
-	"github.com/pkg/errors"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -21,20 +21,20 @@ func CheckResponseMiddleware(ctx context.Context, oauth OAuth, req *http.Request
 
 	respBodyByte, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return errors.WithStack(err)
+		return err
 	}
 	resp.Body = ioutil.NopCloser(bytes.NewBuffer(respBodyByte))
 	strToSign := fmt.Sprintf("%s%s%s", string(respBodyByte), dragonExTs, oauth.GetSignKey())
 	h := md5.New()
 	_, err = io.WriteString(h, strToSign)
 	if err != nil {
-		return errors.WithStack(err)
+		return err
 	}
 
 	sign := fmt.Sprintf("%x", h.Sum(nil))
 	if sign[:8] != dragonExSign {
-		return errors.WithStack(ErrDifferentResponseSign)
+		return ErrDifferentResponseSign
 	}
 
-	return errors.WithStack(err)
+	return err
 }

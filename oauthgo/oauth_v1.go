@@ -3,9 +3,10 @@ package oauthgo
 import (
 	"context"
 	"fmt"
-	"github.com/shopspring/decimal"
 	"net/http"
 	"strings"
+
+	"github.com/shopspring/decimal"
 )
 
 type OAuthV1 struct {
@@ -52,13 +53,8 @@ func (d *OAuthV1) DoLogin(ctx context.Context, code, state, device string, scope
 		}
 		headers = http.Header{}
 	)
-	req, err := d.NewRequest(method, path, values, headers)
-	if err != nil {
-		return
-	}
-
 	r = new(DoLoginResponse)
-	hResp, err = d.Do(ctx, req, r)
+	hResp, err = d.addAndDoRequest(ctx, r, method, path, values, headers)
 	return
 }
 
@@ -84,13 +80,8 @@ func (d *OAuthV1) RefreshToken(ctx context.Context, accessToken, refreshToken st
 		}
 		headers = http.Header{}
 	)
-	req, err := d.NewRequest(method, path, values, headers)
-	if err != nil {
-		return
-	}
-
 	r = new(RefreshTokenResponse)
-	hResp, err = d.Do(ctx, req, r)
+	hResp, err = d.addAndDoRequest(ctx, r, method, path, values, headers)
 	return
 }
 
@@ -108,13 +99,8 @@ func (d *OAuthV1) LogoutToken(ctx context.Context, accessToken string) (r *Logou
 		}
 		headers = http.Header{}
 	)
-	req, err := d.NewRequest(method, path, values, headers)
-	if err != nil {
-		return
-	}
-
 	r = new(LogoutTokenResponse)
-	hResp, err = d.Do(ctx, req, r)
+	hResp, err = d.addAndDoRequest(ctx, r, method, path, values, headers)
 	return
 }
 
@@ -132,13 +118,8 @@ func (d *OAuthV1) QueryUserDetail(ctx context.Context, openId string) (r *QueryU
 		}
 		headers = http.Header{}
 	)
-	req, err := d.NewRequest(method, path, values, headers)
-	if err != nil {
-		return
-	}
-
 	r = new(QueryUserDetailResponse)
-	hResp, err = d.Do(ctx, req, r)
+	hResp, err = d.addAndDoRequest(ctx, r, method, path, values, headers)
 	return
 }
 
@@ -167,13 +148,8 @@ func (d *OAuthV1) PreUser2App(ctx context.Context, tradeNo, coinCode, volume, sc
 		}
 		headers = http.Header{}
 	)
-	req, err := d.NewRequest(method, path, values, headers)
-	if err != nil {
-		return
-	}
-
 	r = new(PreUser2AppResponse)
-	hResp, err = d.Do(ctx, req, r)
+	hResp, err = d.addAndDoRequest(ctx, r, method, path, values, headers)
 	return
 }
 
@@ -213,13 +189,7 @@ func (d *OAuthV1) doApp2UserByOpenIdOrDragonExUid(ctx context.Context, openId, t
 		}
 		headers = http.Header{}
 	)
-	req, err := d.NewRequest(method, path, values, headers)
-	if err != nil {
-		return
-	}
-
-	r = new(DoApp2UserResponse)
-	hResp, err = d.Do(ctx, req, r)
+	hResp, err = d.addAndDoRequest(ctx, r, method, path, values, headers)
 	return
 }
 
@@ -247,13 +217,7 @@ func (d *OAuthV1) openDoApp2UserByOpenIdOrDragonExUid(ctx context.Context, openI
 		}
 		headers = http.Header{}
 	)
-	req, err := d.NewRequest(method, path, values, headers)
-	if err != nil {
-		return
-	}
-
-	r = new(DoApp2UserResponse)
-	hResp, err = d.Do(ctx, req, r)
+	hResp, err = d.addAndDoRequest(ctx, r, method, path, values, headers)
 	return
 }
 
@@ -282,13 +246,8 @@ func (d *OAuthV1) openDoUser2AppByOpenIdOrDragonExUid(ctx context.Context, openI
 		}
 		headers = http.Header{}
 	)
-	req, err := d.NewRequest(method, path, values, headers)
-	if err != nil {
-		return
-	}
-
 	r = new(DoApp2UserResponse)
-	hResp, err = d.Do(ctx, req, r)
+	hResp, err = d.addAndDoRequest(ctx, r, method, path, values, headers)
 	return
 }
 
@@ -314,13 +273,8 @@ func (d *OAuthV1) QueryOrderDetail(ctx context.Context, tradeNo string) (r *Quer
 		}
 		headers = http.Header{}
 	)
-	req, err := d.NewRequest(method, path, values, headers)
-	if err != nil {
-		return
-	}
-
 	r = new(QueryOrderDetailResponse)
-	hResp, err = d.Do(ctx, req, r)
+	hResp, err = d.addAndDoRequest(ctx, r, method, path, values, headers)
 	return
 }
 
@@ -348,13 +302,8 @@ func (d *OAuthV1) ListOrdersByDragonExUid(ctx context.Context, dragonExUid int64
 		}
 		headers = http.Header{}
 	)
-	req, err := d.NewRequest(method, path, values, headers)
-	if err != nil {
-		return
-	}
-
 	r = new(ListOrdersResponse)
-	hResp, err = d.Do(ctx, req, r)
+	hResp, err = d.addAndDoRequest(ctx, r, method, path, values, headers)
 	return
 }
 
@@ -372,13 +321,8 @@ func (d *OAuthV1) RedoPayCallback(ctx context.Context, tradeNo string) (r *RedoP
 		}
 		headers = http.Header{}
 	)
-	req, err := d.NewRequest(method, path, values, headers)
-	if err != nil {
-		return
-	}
-
 	r = new(RedoPayCallbackResponse)
-	hResp, err = d.Do(ctx, req, r)
+	hResp, err = d.addAndDoRequest(ctx, r, method, path, values, headers)
 	return
 }
 
@@ -405,13 +349,8 @@ func (d *OAuthV1) listUserCoins(ctx context.Context, openId string, dragonExUid 
 		}
 		headers = http.Header{}
 	)
-	req, err := d.NewRequest(method, path, values, headers)
-	if err != nil {
-		return
-	}
-
 	r = new(ListUserCoinsResponse)
-	hResp, err = d.Do(ctx, req, r)
+	hResp, err = d.addAndDoRequest(ctx, r, method, path, values, headers)
 	return
 }
 
@@ -433,13 +372,8 @@ func (d *OAuthV1) listUserOpenCoins(ctx context.Context, openId string, dragonEx
 		}
 		headers = http.Header{}
 	)
-	req, err := d.NewRequest(method, path, values, headers)
-	if err != nil {
-		return
-	}
-
 	r = new(ListUserCoinsResponse)
-	hResp, err = d.Do(ctx, req, r)
+	hResp, err = d.addAndDoRequest(ctx, r, method, path, values, headers)
 	return
 }
 
@@ -468,13 +402,8 @@ func (d *OAuthV1) queryUserCoin(ctx context.Context, openId string, dragonExUid,
 		}
 		headers = http.Header{}
 	)
-	req, err := d.NewRequest(method, path, values, headers)
-	if err != nil {
-		return
-	}
-
 	r = new(QueryUserCoinResponse)
-	hResp, err = d.Do(ctx, req, r)
+	hResp, err = d.addAndDoRequest(ctx, r, method, path, values, headers)
 	return
 }
 
@@ -506,13 +435,8 @@ func (d *OAuthV1) queryUserOpenCoin(ctx context.Context, openId string, dragonEx
 		}
 		headers = http.Header{}
 	)
-	req, err := d.NewRequest(method, path, values, headers)
-	if err != nil {
-		return
-	}
-
 	r = new(QueryUserCoinResponse)
-	hResp, err = d.Do(ctx, req, r)
+	hResp, err = d.addAndDoRequest(ctx, r, method, path, values, headers)
 	return
 }
 
@@ -530,4 +454,47 @@ func (d *OAuthV1) QueryUserOpenCoinByDragonExUidCoinId(ctx context.Context, drag
 
 func (d *OAuthV1) QueryUserOpenCoinByDragonExUidCoinCode(ctx context.Context, dragonExUid int64, CoinCode string) (r *QueryUserCoinResponse, hResp *http.Response, err error) {
 	return d.queryUserOpenCoin(ctx, "", dragonExUid, 0, CoinCode)
+}
+
+func (d *OAuthV1) ListAdminOpenCoins(ctx context.Context) (r *ListUserCoinsResponse, hResp *http.Response, err error) {
+	var (
+		path    = "/api/v1/open/admin/coin/list/"
+		method  = http.MethodPost
+		values  = map[string]interface{}{}
+		headers = http.Header{}
+	)
+	r = new(ListUserCoinsResponse)
+	hResp, err = d.addAndDoRequest(ctx, r, method, path, values, headers)
+	return
+}
+
+func (d *OAuthV1) queryAdminOpenCoin(ctx context.Context, CoinId int64, coinCode string) (r *QueryUserCoinResponse, hResp *http.Response, err error) {
+	var (
+		path   = "/api/v1/open/admin/coin/detail/"
+		method = http.MethodPost
+		values = map[string]interface{}{
+			"coin_id":   CoinId,
+			"coin_code": coinCode,
+		}
+		headers = http.Header{}
+	)
+	r = new(QueryUserCoinResponse)
+	hResp, err = d.addAndDoRequest(ctx, r, method, path, values, headers)
+	return
+}
+
+func (d *OAuthV1) QueryAdminOpenCoinByCoinId(ctx context.Context, CoinId int64) (r *QueryUserCoinResponse, hResp *http.Response, err error) {
+	return d.queryAdminOpenCoin(ctx, CoinId, "")
+}
+
+func (d *OAuthV1) QueryAdminOpenCoinByCoinCode(ctx context.Context, CoinCode string) (r *QueryUserCoinResponse, hResp *http.Response, err error) {
+	return d.queryAdminOpenCoin(ctx, 0, CoinCode)
+}
+
+func (d *OAuthV1) addAndDoRequest(ctx context.Context, r interface{}, method, path string, values map[string]interface{}, headers http.Header) (hResp *http.Response, err error) {
+	req, err := d.NewRequest(method, path, values, headers)
+	if err != nil {
+		return
+	}
+	return d.Do(ctx, req, r)
 }

@@ -4,11 +4,12 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"net/http"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
 )
 
 var (
@@ -41,7 +42,7 @@ const (
 
 func TestOAuthV1_DoLogin(t *testing.T) {
 	var (
-		code   = "85b1aa3ef4"
+		code   = "59f47ee75a"
 		scopes = []int{ScopeLogin}
 	)
 	resp, _, err := apiV1.DoLogin(context.Background(), code, state, device, scopes)
@@ -279,23 +280,50 @@ func TestOAuthV1_QueryUserCoinByDragonExUidCoinCode(t *testing.T) {
 	assert.Equal(t, true, resp.Ok)
 }
 
-func displayRequestAndResponseMiddleware(ctx context.Context, oauth OAuth, req *http.Request, resp *http.Response) (err error) {
-	reqBodyByte, err := ioutil.ReadAll(req.Body)
-	if err != nil {
-		return
-	}
-	req.Body = ioutil.NopCloser(bytes.NewBuffer(reqBodyByte))
+func TestOAuthV1_ListAdminOpenCoins(t *testing.T) {
+	resp, _, err := apiV1.ListAdminOpenCoins(context.Background())
 
+	assert.Equal(t, nil, err)
+	assert.Equal(t, true, resp.Ok)
+}
+
+func TestOAuthV1_QueryAdminOpenCoinByOpenIdCoinId(t *testing.T) {
+	var (
+		coinId int64 = 104
+	)
+	resp, _, err := apiV1.QueryAdminOpenCoinByCoinId(context.Background(), coinId)
+
+	assert.Equal(t, nil, err)
+	assert.Equal(t, true, resp.Ok)
+}
+
+func TestOAuthV1_QueryAdminOpenCoinByOpenIdCoinCode(t *testing.T) {
+	var (
+		coinCode = "usdt"
+	)
+	resp, _, err := apiV1.QueryAdminOpenCoinByCoinCode(context.Background(), coinCode)
+
+	assert.Equal(t, nil, err)
+	assert.Equal(t, true, resp.Ok)
+}
+
+func displayRequestAndResponseMiddleware(ctx context.Context, oauth OAuth, req *http.Request, resp *http.Response) (err error) {
 	fmt.Println(fmt.Sprintf("req.method = %+v", req.Method))
 	fmt.Println(fmt.Sprintf("req.url = %+v", req.URL.String()))
-	fmt.Println(fmt.Sprintf("req.body = %s", string(reqBodyByte)))
+	if req.Body != nil {
+		reqBodyByte, err := ioutil.ReadAll(req.Body)
+		if err != nil {
+			return err
+		}
+		req.Body = ioutil.NopCloser(bytes.NewBuffer(reqBodyByte))
+		fmt.Println(fmt.Sprintf("req.body = %s", string(reqBodyByte)))
+	}
 
 	respBodyByte, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return
+		return err
 	}
 	resp.Body = ioutil.NopCloser(bytes.NewBuffer(respBodyByte))
-
 	fmt.Println(fmt.Sprintf("resp.body = %s", string(respBodyByte)))
-	return
+	return err
 }
