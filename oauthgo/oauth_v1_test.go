@@ -307,6 +307,16 @@ func TestOAuthV1_QueryAdminOpenCoinByOpenIdCoinCode(t *testing.T) {
 	assert.Equal(t, true, resp.Ok)
 }
 
+func TestOAuthV1_ListMarketReal(t *testing.T) {
+	var (
+		symbols = []string{"DT_USDT", "BTC_USDT", "EOS_USDT"}
+	)
+	resp, _, err := apiV1.ListMarketReal(context.Background(), symbols)
+
+	assert.Equal(t, nil, err)
+	assert.Equal(t, true, resp.Ok)
+}
+
 func displayRequestAndResponseMiddleware(ctx context.Context, oauth OAuth, req *http.Request, resp *http.Response) (err error) {
 	fmt.Println(fmt.Sprintf("req.method = %+v", req.Method))
 	fmt.Println(fmt.Sprintf("req.url = %+v", req.URL.String()))

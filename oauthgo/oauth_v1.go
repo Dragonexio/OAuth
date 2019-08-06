@@ -498,3 +498,27 @@ func (d *OAuthV1) addAndDoRequest(ctx context.Context, r interface{}, method, pa
 	}
 	return d.Do(ctx, req, r)
 }
+
+type MarketRealData struct {
+	Symbol     string
+	ClosePrice decimal.Decimal
+}
+
+type ListMarketRealResponse struct {
+	BaseResponse
+	Data []*MarketRealData
+}
+
+func (d *OAuthV1) ListMarketReal(ctx context.Context, symbols []string) (r *ListMarketRealResponse, hResp *http.Response, err error) {
+	var (
+		path   = "/api/v1/market/real/list/"
+		method = http.MethodPost
+		values = map[string]interface{}{
+			"symbols": strings.Join(symbols, ","),
+		}
+		headers = http.Header{}
+	)
+	r = new(ListMarketRealResponse)
+	hResp, err = d.addAndDoRequest(ctx, r, method, path, values, headers)
+	return
+}
