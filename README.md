@@ -41,7 +41,11 @@
 
  3. AccessKey与SecretKey是重要信息，请勿跟随客户端分发
    
-## 支付时序图
+## 开放账户支付时序图
+
+![开放账户支付](./docs/cn/images/DragonEx开放平台-开放账户支付流程图.png)
+
+## 币币账户支付时序图
 
 ![支付时序图](./docs/cn/images/DragonEx开放平台-通过H5支付时序图.png)
 
