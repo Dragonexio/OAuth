@@ -15,11 +15,11 @@
 <polygon fill="none" stroke="#000000" points="0,-.5 0,-526.5 835,-526.5 835,-.5 0,-.5"/>
 <text text-anchor="middle" x="417.5" y="-509.7" font-family="Times,serif" font-size="16.00" fill="#000000">登录授权相关接口或页面</text>
 <polyline fill="none" stroke="#000000" points="0,-500.5 835,-500.5 "/>
-<text text-anchor="middle" x="185" y="-470.7" font-family="Times,serif" font-size="16.00" fill="#000000">接入方需提供的页面</text>
-<polyline fill="none" stroke="#000000" points="370,-448.5 370,-500.5 "/>
-<text text-anchor="start" x="378" y="-483.7" font-family="Times,serif" font-size="16.00" fill="#000000">应用入口页面</text>
-<polyline fill="none" stroke="#000000" points="370,-474.5 835,-474.5 "/>
-<text text-anchor="start" x="378" y="-457.7" font-family="Times,serif" font-size="16.00" fill="#000000">授权成功（或失败）后的跳转页面</text>
+<text text-anchor="middle" x="121" y="-470.7" font-family="Times,serif" font-size="16.00" fill="#000000">接入方需提供的页面</text>
+<polyline fill="none" stroke="#000000" points="242,-448.5 242,-500.5 "/>
+<text text-anchor="start" x="250" y="-483.7" font-family="Times,serif" font-size="16.00" fill="#000000">应用入口页面</text>
+<polyline fill="none" stroke="#000000" points="242,-474.5 835,-474.5 "/>
+<text text-anchor="start" x="250" y="-457.7" font-family="Times,serif" font-size="16.00" fill="#000000">授权成功（或失败）后的跳转页面（可使用DragonEx统一提供的页面）</text>
 <polyline fill="none" stroke="#000000" points="0,-448.5 835,-448.5 "/>
 <text text-anchor="middle" x="80.5" y="-374.7" font-family="Times,serif" font-size="16.00" fill="#000000">DragonEx前端授权页</text>
 <polyline fill="none" stroke="#000000" points="161,-308.5 161,-448.5 "/>
