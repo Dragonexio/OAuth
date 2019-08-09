@@ -1,0 +1,44 @@
+@startuml DragonEx开放平台-开放账户支付流程图
+
+actor 用户 as user #White
+participant DragonEx页面 as dragonexBrowser
+participant 接入方页面 as appBrowser
+participant App服务端 as appServer #Pink
+participant DragonEx服务端 as dragonexServer #aqua
+
+' 登录相关流程
+autonumber 1 1
+note right of user: 登录&&获取PayToken
+user -[#Gray]> dragonexBrowser: 同意登录授权
+dragonexBrowser -[#Gray]> dragonexServer: 申请登录授权
+dragonexServer -[#Gray]> dragonexBrowser: 返回登录AccessCode
+dragonexBrowser -[#Gray]> appBrowser: 跳转到接入方页面
+appBrowser -[#Gray]> appServer: 携带AccessCode请求
+appServer -[#Gray]> dragonexServer: 申请登录
+dragonexServer -[#Gray]> appServer: 授权登录，返回AccessToken、PayToken等
+appServer -[#Gray]-> appServer: 保存PayToken等信息，后续支付时会用到
+appServer -[#Gray]> appBrowser: 登录授权成功
+autonumber stop
+
+|||
+
+' user -> app
+autonumber 1 1
+note right of appServer: 从用户向App管理员转账时：即充值
+appServer -[#Blue]> dragonexServer: 调用`/api/v1/open/pay/user2app/do/`\n需带上PayTOken
+dragonexServer -[#Blue]> appServer: 返回支付结果
+dragonexServer -[#Blue]-> appServer: 异步支付回调：\n收到200HTTP状态码即认为回调成功，\n若回调失败在36H内隔一小段时间重试一次
+autonumber stop
+
+|||
+|||
+
+' app -> user
+autonumber 1 1
+note right of appServer: 从App管理员向用户转账时：即提现
+appServer -[#OrangeRed]> dragonexServer: 调用`/api/v1/open/pay/app2user/do/`
+dragonexServer -[#OrangeRed]> appServer: 返回支付结果
+dragonexServer -[#OrangeRed]-> appServer: 异步支付回调：\n收到200HTTP状态码即认为回调成功，\n若回调失败在36H内隔一小段时间重试一次
+autonumber stop
+
+@enduml
