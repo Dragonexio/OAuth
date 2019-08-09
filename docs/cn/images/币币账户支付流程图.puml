@@ -1,0 +1,42 @@
+@startuml DragonEx开放平台-币币账户支付流程图
+
+actor 用户 as user #White
+participant DragonEx页面 as dragonexBrowser
+participant 接入方页面 as appBrowser
+participant App服务端 as appServer #Pink
+participant DragonEx服务端 as dragonexServer #aqua
+
+autonumber 1 1
+appBrowser -> appServer: 申请支付
+appServer --> appServer: 进行需要的处理，如创建订单等
+appServer -> dragonexServer: 申请支付\n（https://oauth.dragonex.io/api/v1/user2app/pre/\n?app_id=yourappid\n&trade_no=支付订单号，不可重复\n&coin_code=支付币种\n&volume=支付数量\n&scene=支付场景\n&desc=详细描述\n&device=支付设备\n&state=随机且不可预测的字符串\n&domain=用户登录时使用的域名\n&specify_dragonex_uid=指定支付的用户，若不为0，则只允许此用户支付\n&redirect_url=支付成功后跳转的地址）
+
+dragonexServer -> dragonexServer: 进行各项检验等
+dragonexServer -> appServer: 返回申请结果：\n若成功，返回支付地址；\n若失败，返回错误码
+appServer -> appBrowser: 返回申请结果
+
+appBrowser -[#Gray]-> appBrowser: 若申请支付失败，接入方自行处理
+autonumber stop
+
+autonumber 7 1
+appBrowser -> dragonexBrowser: 申请成功：跳转到返回的支付地址
+dragonexBrowser -> user: 询问用户是否同意支付
+
+user -[#Gray]-> dragonexBrowser: 用户不同意支付
+dragonexBrowser -[#Gray]-> appBrowser: 跳转到上面提供的redirect_url，\n且带上订单号及status=-1参数
+appBrowser -[#Gray]-> appBrowser: 后续由接入方自行处理
+autonumber stop
+
+autonumber 9 1
+user -> dragonexBrowser: 用户同意支付
+dragonexBrowser -> dragonexServer: 申请支付
+dragonexServer --> dragonexServer: 进行校验、支付等操作
+dragonexServer -> dragonexBrowser: 返回支付结果：\n若成功，返回订单信息；\n若失败，返回错误码
+dragonexServer --> appServer: 若支付成功，会有异步支付回调（注，仅成功时会回调）
+
+dragonexBrowser -> appBrowser: 携带支付结果（成功或失败），跳转到上面提供的redirect_url
+appBrowser --> appBrowser: 接入方进行后续处理
+appBrowser --> appServer: 接入方进行后续处理
+autonumber stop
+
+@enduml

@@ -8,7 +8,7 @@ participant DragonEx服务端 as dragonexServer #aqua
 
 autonumber 1 1
 user -> appBrowser: 用户点击APP入口\n（会携带domain, lang等字段，\n详情见登录相关接口说明）
-appBrowser -> dragonexBrowser: 接入方判断是否需要申请授权，\n若需要，跳转到DragonEx授权页面\n(https://{domain}/oauth/login/\n?app_id=yourappid\n&scopes=1\n&state=jklutaiouhg\n&device=yourdeviceuuid\n&redirect_url=https://yourredirecturl.xxx/xxx)
+appBrowser -> dragonexBrowser: 接入方判断是否需要申请授权，\n若需要，跳转到DragonEx授权页面\n(https://{domain}/oauth/login/\n?app_id=yourappid\n&scopes=登录token需要的权限\n&state=随机字符串\n&device=登录设备\n&redirect_url=登录成功后跳转的地址)
 dragonexBrowser -> user: 向用户申请授权
 user -> dragonexBrowser: 用户允许授权（若不允许，DragonEx会处理后续流程）
 dragonexBrowser -> dragonexServer: 申请AccessCode
