@@ -36,7 +36,7 @@
 
 ## 登录授权时序图
 
-![登录授权时序图](./images/DragonEx开放平台-通过H5认证时序图.png)
+![登录授权时序图](./images/DragonEx开放平台-登录授权流程图.png)
 
  1. 用户同意授权后，DragonEx会提供一个AccessCode，并携带此参数跳转到接入方指定的地址（获取AccessCode的流程也可以使用DragonEx统一提供的页面处理，但是这样的话用户要进行登录授权就必须从DragonEx的开放平台列表进入了）
 

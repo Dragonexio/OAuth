@@ -1,0 +1,29 @@
+@startuml DragonEx开放平台-登录授权流程图
+
+actor 用户 as user #White
+participant DragonEx页面 as dragonexBrowser
+participant 接入方页面 as appBrowser
+participant App服务端 as appServer #Pink
+participant DragonEx服务端 as dragonexServer #aqua
+
+autonumber 1 1
+user -> appBrowser: 用户点击APP入口\n（会携带domain, lang等字段，\n详情见登录相关接口说明）
+appBrowser -> dragonexBrowser: 接入方判断是否需要申请授权，\n若需要，跳转到DragonEx授权页面\n(https://{domain}/oauth/login/\n?app_id=yourappid\n&scopes=1\n&state=jklutaiouhg\n&device=yourdeviceuuid\n&redirect_url=https://yourredirecturl.xxx/xxx)
+dragonexBrowser -> user: 向用户申请授权
+user -> dragonexBrowser: 用户允许授权（若不允许，DragonEx会处理后续流程）
+dragonexBrowser -> dragonexServer: 申请AccessCode
+dragonexServer -> dragonexBrowser: 返回AccessCode\n（若申请AccessCode失败，\n后续流程也由DragonEx处理）
+note over of dragonexBrowser: 以上流程也可使用DragonEx统一提供的页面处理\n但是此时用户若要登录就只能从DragonEx开放平台进入
+autonumber stop
+
+autonumber 1 1
+dragonexBrowser -> appBrowser: 携带AccessCode与其他信息\n跳转到上面的redirect_url
+appBrowser -> appServer: 将拿到的AccessCode等信息\n传给APP服务端
+appServer -> dragonexServer: 使用AcccessCode进行登录\n（https://oauth.dragonex.io/api/v1/login/do/）
+dragonexServer -> appServer: 返回登录结果：\n若成功，返回登录Token；\n若失败，返回对应错误码
+appServer --> appServer: 根据需要自行处理
+appServer -> appBrowser: 返回登录结果及其他信息
+appBrowser -> dragonexServer: 登录成功后，即可使用AccessToken访问DragonEx上授权的资源
+autonumber stop
+
+@enduml
