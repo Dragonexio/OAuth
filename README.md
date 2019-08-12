@@ -17,13 +17,13 @@
 
 2. 注册两个账号（[正式环境](https://dragonex.co/zh-hans/account/register)，[测试环境](https://test.dragonex.co/zh-hans/account/register)）：一个用于设置APP的一些信息，如支付回调地址等；一个用户利润划转（若无利润划转需求，此账号可不需要）。（建议使用公司邮箱或公司专用手机号注册，避免因公司人员变动产生不必要的麻烦。）
    
-    ![](./images/注册.png)
+    ![](./docs/cn/images/注册.png)
 
 3. 将注册好的账号提供给DragonEx工作人员（区分好两个账号各自的用户，App管理员账号会被冻结交易、提现等与资金相关的权限），添加APP信息
 
 4. 登录管理员账号，进入“个人中心”-->“开放平台”（[正式环境](https://dragonex.co/zh-hans/asset/open/app)，[测试环境](https://test.dragonex.co/zh-hans/asset/open/app)），创建AccessKey与SecretKey、配置支付回调地址等
 
-    ![](./images/配置APP信息.png)
+    ![](./docs/cn/images/配置APP信息.png)
 
     1. **注意**：更新**响应数据校验秘钥**后，前端展示会立即修改，但是DragonEx实际进行签名的会有一小段延时（1H内全部切换为新的秘钥），在此期间可能有部分使用新的秘钥，部分使用旧的秘钥，需接入方在更改秘钥时注意下。
 
