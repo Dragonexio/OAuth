@@ -11,17 +11,17 @@
 
 ## 对接流程
 
-因为我们的对接会先在测试环境进行，故以下的流程说明的地址均是测试环境的地址，上线前需在正式环境同样走一遍
+因为我们的对接会先在测试环境进行，上线前需在正式环境同样走一遍
 
 1. 联系DragonEx工作人员，添加访问测试环境的权限
 
-2. [注册](https://test.dragonex.co/zh-hans/account/register)两个账号：一个用于设置APP的一些信息，如支付回调地址等；一个用户利润划转（若无利润划转需求，此账号可不需要）。（建议使用公司邮箱或公司专用手机号注册，避免因公司人员变动产生不必要的麻烦。）
+2. 注册两个账号（[正式环境](https://dragonex.co/zh-hans/account/register)，[测试环境](https://test.dragonex.co/zh-hans/account/register)）：一个用于设置APP的一些信息，如支付回调地址等；一个用户利润划转（若无利润划转需求，此账号可不需要）。（建议使用公司邮箱或公司专用手机号注册，避免因公司人员变动产生不必要的麻烦。）
    
     ![](./images/注册.png)
 
 3. 将注册好的账号提供给DragonEx工作人员（区分好两个账号各自的用户，App管理员账号会被冻结交易、提现等与资金相关的权限），添加APP信息
 
-4. 登录管理员账号，进入[“个人中心”-->“开放平台”](https://test.dragonex.co/zh-hans/asset/open/app)，创建AccessKey与SecretKey、配置支付回调地址等
+4. 登录管理员账号，进入“个人中心”-->“开放平台”（[正式环境](https://dragonex.co/zh-hans/asset/open/app)，[测试环境](https://test.dragonex.co/zh-hans/asset/open/app)），创建AccessKey与SecretKey、配置支付回调地址等
 
     ![](./images/配置APP信息.png)
 
