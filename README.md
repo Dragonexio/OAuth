@@ -26,7 +26,7 @@
    
       ![](./docs/cn/images/注册.png)
 
-   4. 将注册好的账号提供给DragonEx开发人员（区分好两个账号各自的用户，App管理员账号会被冻结交易、提现等与资金相关的权限），由DragonEx开发添加APP信息
+   4. 将注册好的账号提供给DragonEx开发人员，由DragonEx开发添加APP信息。注意区分好两个账号各自的用处，App管理员账号会被冻结交易、提现等与资金相关的权限，分润账号各项权限均正常
 
    5. 接入方登录管理员账号，进入[“个人中心”-->“开放平台”](https://test.dragonex.co/zh-hans/asset/open/app)，创建AccessKey与SecretKey、配置支付回调地址等
 
@@ -38,11 +38,11 @@
 
    7. 接入方自测
 
-   8.  龙网验收（充提功能、第三方产品流程、产品数据、对账）
+   8.  龙网验收（第三方产品流程、产品数据、对账）
 
 1. 正式上线
 
-   1. 接入方在正式环境[注册](https://dragonex.co/zh-hans/account/register)**两个**测试账号，与在测试环境一致
+   1. 接入方在正式环境[注册](https://dragonex.co/zh-hans/account/register)**两个**账号，与在测试环境一致
 
    2. 接入方填写[《DragonEx开放平台第三方APP信息录入表》](https://jinshuju.net/f/CRKUMu)
    
@@ -55,6 +55,8 @@
    6. DragonEx工作人员提供给小部分用户线上灰度测试
    
    7. 灰度测试通过，DragonEx安排开放平台导流
+
+1. 上线后接入方需留意线上数据，并有人负责解答用户疑问
 
 ## 登录授权流程图
 
