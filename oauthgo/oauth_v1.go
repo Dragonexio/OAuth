@@ -30,6 +30,7 @@ type DoLoginResponse struct {
 		AppId                  string `json:"app_id"`
 		OpenId                 string `json:"open_id"`
 		UnionId                string `json:"union_id"`
+		Uid                    int64  `json:"uid"`
 		Scopes                 []int  `json:"scopes"`
 		PayToken               string `json:"pay_token"`
 	}
@@ -130,7 +131,7 @@ type PreUser2AppResponse struct {
 	}
 }
 
-func (d *OAuthV1) PreUser2App(ctx context.Context, tradeNo, coinCode, volume, scene, desc, device, state, redirectUrl, domain string, specifyDragonExUid int) (r *PreUser2AppResponse, hResp *http.Response, err error) {
+func (d *OAuthV1) PreUser2App(ctx context.Context, tradeNo, coinCode, volume, scene, desc, device, state, redirectUrl, domain string, specifyDragonExUid int64) (r *PreUser2AppResponse, hResp *http.Response, err error) {
 	var (
 		path   = "/api/v1/pay/user2app/pre/"
 		method = http.MethodPost
@@ -189,6 +190,7 @@ func (d *OAuthV1) doApp2UserByOpenIdOrDragonExUid(ctx context.Context, openId, t
 		}
 		headers = http.Header{}
 	)
+	r = new(DoApp2UserResponse)
 	hResp, err = d.addAndDoRequest(ctx, r, method, path, values, headers)
 	return
 }
@@ -217,6 +219,7 @@ func (d *OAuthV1) openDoApp2UserByOpenIdOrDragonExUid(ctx context.Context, openI
 		}
 		headers = http.Header{}
 	)
+	r = new(DoApp2UserResponse)
 	hResp, err = d.addAndDoRequest(ctx, r, method, path, values, headers)
 	return
 }
