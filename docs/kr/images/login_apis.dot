@@ -1,0 +1,52 @@
+digraph g {
+graph [
+    rankdir = "LR"
+];
+
+node [
+    fontsize = "16"
+    shape=record
+];
+
+LoginApis [
+    label = "登录授权相关接口或页面
+    | {
+        接入方需提供的页面 |
+        {
+            应用入口页面 \l
+            | 授权成功（或失败）后的跳转页面\l
+        }
+    }
+
+    | {
+        DragonEx前端授权页 |
+        {
+            https://dragonex.io/oauth/login/ \l
+            | https://dragonex.im/oauth/login/ \l
+            | ... \l
+            | 从DragonEx开放平台跳转到第三方应用的入口页面时，\l会传入domain（`dragonex.io`、`dragonex.im`或`test.dragonex.co`等）表示用户当前使用的域名，\l
+            接入方需要根据此domain决定跳转到哪个授权页面\l
+        }
+    }
+    
+    | {
+        接入方客户端调用 | 
+        {
+            /api/v1/login/logout/ \l 主动将AccessToken下线\r
+            | /api/v1/token/status/ \l 获取AccessToken的状态\r
+            | /api/v1/user/detail/ \l 获取授权用户的信息\r
+        }            
+    }
+
+    | {
+        接入方服务端调用 | 
+        {
+            /api/v1/login/do/ \l 授权登录\r
+            | /api/v1/login/refresh/ \l 更新AccessToken\r
+            | /api/v1/login/logout/ \l 主动将AccessToken下线\r
+            | /api/v1/user/detail/ \l 获取授权用户的信息\r
+        }
+    }
+    "
+]
+}

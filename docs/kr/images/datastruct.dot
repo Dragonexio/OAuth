@@ -1,0 +1,141 @@
+digraph g {
+graph [
+    rankdir = "LR" // 说明图为从做向右横向的
+];
+
+node [
+    fontsize = "16"
+    shape=record  // 数据结构
+];
+
+Company [
+    label = "Company信息
+    | <company_id> company_id(string) \l 接入方APP对应的CompanyId，由DragonEx确定\r
+    | name(string) \l 接入方公司名称，可配置多语言版本\r
+    | website(string) \l 接入方公司主页地址\r
+    | addr(string) \l 接入方公司地址，可配置多语言版本\r
+    | logo(string) \l 接入方公司LOGO\r
+    | desc(string) \l 接入方公司描述说明，可配置多语言版本\r
+    "
+]
+
+App [
+    label = "App信息
+    | <app_id> app_id(string) \l 接入方AppId，由DragonEx确定\r
+    | <company_id>(string) company_id \l 接入方APP对应的CompanyId\r
+    | admin_uid(int) \l APP的管理员账户ID\r
+    | name(string) \l APP名称，可配置多语言版本\r
+    | poster(string) \l 宣传海报地址，可配置多语言版本\r
+    | website(string) \l APP主页地址\r
+    | logo(string) \l APP Logo\r
+    | <scopes> scopes(int[]) \l 该APP拥有的权限列表\r
+    | coin_codes(string[]) \l 该APP可支付的币种列表\r
+    | cut_rate(string) \l 该APP支付时收取的佣金比例\r
+    | entry(string) \l 从DragonEx开放平台进入该APP的入口地址\r
+    | callback(string) \l 该APP的支付回调地址，可由APP管理员修改\r
+    | sign_key(string) \l 该APP服务端校验DragonEx HTTP响应的密钥，可由APP管理员修改\r
+    "
+]
+
+
+Scopes1, Scopes2 [
+    label = "<scopes> Scope
+    | <1> 1 \l 登录\r
+    | <2> 2 \l 暂不开放\r
+    | <3> 3 \l 提现\r
+    | <4> 4 \l 交易\r
+    | <5> 5 \l 支付，从用户向接入方\r
+    | <6> 6 \l 支付，从接入方向用户\r
+    | <7> 7 \l 获取用户资产信息\r
+    | <8> 8 \l 暂不开放\r
+    | <9> 9 \l 暂不开放\r
+    "
+]
+
+AppKey [
+    label = "AppKey信息
+    | <app_id> app_id(string) \l 该Key所属的AppId\r
+    | access_key(string) \l AccessKey\r
+    | secret_key(string) \l SecretKey\r
+    | ips(string[]) \l 该Key绑定的IP列表\r
+    "
+]
+
+UnionId [
+    label = "UnionId信息
+    | <company_id> company_id(string) \l 该UnionId所属的CompanyId\r
+    | union_id(string) \l UnionId，该CompanyId下所有App的同一个用户，其UnionId是一样的\r
+    "
+]
+
+OpenId [
+    label = "OpenId信息
+    | <app_id> app_id(string) \l 该OpenId所属的AppId\r
+    | <open_id> open_id(string) \l OpenId，不同App下同一个用户的OpenId没有关系\r
+    "
+]
+
+AccessToken [
+    label = "AccessToken信息
+    | <app_id> app_id(string) \l 该AccessToken所属的AppId\r
+    | <open_id> open_id(string) \l 此次登录的OpenId
+    | access_token(string) \l 授权Token，有效期较短\r
+    | refresh_token(string) \l 用于刷新AccessToken，有效期较长\r
+    | <scopes> scopes(int[]) \l 此次登录授予的权限\r
+    | device(string) \l 登录设备\r
+    "
+]
+
+TransLog [
+    label = "支付转账记录
+    | trade_no(string) \l 转账流水号，由接入方在申请支付时传入\r
+    | <app_id> app_id(string) \l AppId\r
+    | admin_uid(int) \l 支付时该App绑定的管理员账号ID\r
+    | <open_id> open_id(string) \l 进行支付的DragonEx用户在此App的OpenId\r
+    | coin_id(int) \l 支付币种ID\r
+    | total_volume(string) \l 支付数量\r
+    | cut_volume(string) \l 收取的佣金数量，total_volume-cut_volume即为实际到账的数量\r
+    | <direction> direction(int) \l 转账方向\r
+    | <status> status(int) \l 转账状态\r
+    | scene(string) \l 支付场景，由接入方在申请支付时传入\r
+    | desc(string) \l 支付描述，由接入方在申请支付时传入\r
+    | device(string) \l 支付设备信息，由接入方在申请支付时传入\r
+    "
+]
+
+
+TransDirection [
+    label = "<direction> 转账方向
+    | <1> 1\l从用户向接入方\r
+    | <2> 2\l从接入方向用户\r
+    "
+]
+
+TransStatus [
+    label = "<status> 转账状态
+    | <-1> -1\l用户取消支付\r
+    | <1> 1\l支付成功\r
+    | <2> 2\l支付失败\r
+    | <3> 3\l支付转账中\r
+    "
+]
+
+
+Company:company_id -> App:company_id;
+Company:company_id -> UnionId:company_id;
+
+App:app_id -> OpenId:app_id;
+App:app_id -> AppKey:app_id;
+App:app_id -> AccessToken:app_id;
+App:scopes -> Scopes1:scopes;
+
+OpenId:open_id -> AccessToken:open_id;
+
+AccessToken:scopes -> Scopes2:scopes;
+
+App:app_id -> TransLog:app_id;
+OpenId:open_id -> TransLog:open_id;
+
+TransLog:direction -> TransDirection:direction;
+TransLog:status -> TransStatus:status;
+}
