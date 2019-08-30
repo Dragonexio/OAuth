@@ -56,6 +56,8 @@ PaymentApis [
                   | /api/v1/user/coin/detail/ \l 查询用户币币账户单项资产 \r
                   | /api/v1/pay/user2app/pre/ \l 申请支付（用户向接入方支付）\r
                   | /api/v1/pay/app2user/do/ \l 从接入方转账给用户\r
+                  | /api/v1/admin/coin/list/ \l 查询App管理员币币账户资产列表 \r
+                  | /api/v1/admin/coin/detail/ \l 查询App管理员币币账户单项资产 \r
                 }
             }
             |
