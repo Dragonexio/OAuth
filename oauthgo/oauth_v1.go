@@ -426,6 +426,41 @@ func (d *OAuthV1) QueryUserCoinByDragonExUidCoinCode(ctx context.Context, dragon
 	return d.queryUserCoin(ctx, "", dragonExUid, 0, CoinCode)
 }
 
+func (d *OAuthV1) ListAdminCoins(ctx context.Context) (r *ListUserCoinsResponse, hResp *http.Response, err error) {
+	var (
+		path    = "/api/v1/admin/coin/list/"
+		method  = http.MethodPost
+		values  = map[string]interface{}{}
+		headers = http.Header{}
+	)
+	r = new(ListUserCoinsResponse)
+	hResp, err = d.addAndDoRequest(ctx, r, method, path, values, headers)
+	return
+}
+
+func (d *OAuthV1) queryAdminCoin(ctx context.Context, CoinId int64, coinCode string) (r *QueryUserCoinResponse, hResp *http.Response, err error) {
+	var (
+		path   = "/api/v1/admin/coin/detail/"
+		method = http.MethodPost
+		values = map[string]interface{}{
+			"coin_id":   CoinId,
+			"coin_code": coinCode,
+		}
+		headers = http.Header{}
+	)
+	r = new(QueryUserCoinResponse)
+	hResp, err = d.addAndDoRequest(ctx, r, method, path, values, headers)
+	return
+}
+
+func (d *OAuthV1) QueryAdminCoinByCoinId(ctx context.Context, CoinId int64) (r *QueryUserCoinResponse, hResp *http.Response, err error) {
+	return d.queryAdminCoin(ctx, CoinId, "")
+}
+
+func (d *OAuthV1) QueryAdminCoinByCoinCode(ctx context.Context, CoinCode string) (r *QueryUserCoinResponse, hResp *http.Response, err error) {
+	return d.queryAdminCoin(ctx, 0, CoinCode)
+}
+
 func (d *OAuthV1) queryUserOpenCoin(ctx context.Context, openId string, dragonExUid, CoinId int64, coinCode string) (r *QueryUserCoinResponse, hResp *http.Response, err error) {
 	var (
 		path   = "/api/v1/open/user/coin/detail/"
