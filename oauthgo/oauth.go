@@ -55,8 +55,8 @@ const (
 )
 
 var (
-	ErrNotSupportMethod = errors.New("do not support this method")
-	ErrNot200StatusCode = errors.New("not 200 http status code")
+	ErrDoNotSupportThisMethod = errors.New("do not support this method")
+	ErrNot200StatusCode       = errors.New("not 200 http status code")
 )
 
 type DefaultOAuth struct {
@@ -108,7 +108,7 @@ func (oauth *DefaultOAuth) NewRequest(method, path string, values map[string]int
 		return oauth.makePostRequest(path, values, header)
 
 	default:
-		return req, ErrNotSupportMethod
+		return req, ErrDoNotSupportThisMethod
 	}
 }
 
