@@ -55,7 +55,7 @@ const (
 )
 
 var (
-	ErrNotSupportMethod = errors.New("not support this method")
+	ErrNotSupportMethod = errors.New("do not support this method")
 	ErrNot200StatusCode = errors.New("not 200 http status code")
 )
 
