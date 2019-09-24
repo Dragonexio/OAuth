@@ -84,12 +84,12 @@ func TestOAuthV1_QueryUserDetail(t *testing.T) {
 
 func TestOAuthV1_PreUser2App(t *testing.T) {
 	var (
-		tradeNo            = fmt.Sprint(time.Now().Unix())
-		coinCode           = "usdt"
-		volume             = "0.1"
-		redirectUrl        = "https://www.google.com"
-		domain             = "dragonex.io"
-		specifyDragonExUid = 0
+		tradeNo                  = fmt.Sprint(time.Now().Unix())
+		coinCode                 = "usdt"
+		volume                   = "0.1"
+		redirectUrl              = "https://www.google.com"
+		domain                   = "dragonex.io"
+		specifyDragonExUid int64 = 0
 	)
 	resp, _, err := apiV1.PreUser2App(context.Background(), tradeNo, coinCode, volume, scene, desc, device, state, redirectUrl, domain, specifyDragonExUid)
 
@@ -118,6 +118,18 @@ func TestOAuthV1_DoApp2UserByDragonExUid(t *testing.T) {
 		volume            = "0.1"
 	)
 	resp, _, err := apiV1.DoApp2UserByDragonExUid(context.Background(), dragonExUid, tradeNo, coinCode, volume, scene, desc, device)
+
+	assert.Equal(t, nil, err)
+	assert.Equal(t, true, resp.Ok)
+}
+
+func TestOAuthV1_Refund(t *testing.T) {
+	var (
+		oriTradeNo    = ""
+		refundTradeNo = ""
+		refundRate    = "1"
+	)
+	resp, _, err := apiV1.Refund(context.Background(), oriTradeNo, refundTradeNo, refundRate, scene, desc, device)
 
 	assert.Equal(t, nil, err)
 	assert.Equal(t, true, resp.Ok)

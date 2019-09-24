@@ -203,6 +203,30 @@ func (d *OAuthV1) DoApp2UserByDragonExUid(ctx context.Context, dragonExUid int64
 	return d.doApp2UserByOpenIdOrDragonExUid(ctx, "", tradeNo, coinCode, volume, scene, desc, device, dragonExUid)
 }
 
+type RefundResponse struct {
+	BaseResponse
+	Data *OrderDetail
+}
+
+func (d *OAuthV1) Refund(ctx context.Context, oriTradeNo, refundTradeNo, refundRate string, scene, desc, device string) (r *RefundResponse, hResp *http.Response, err error) {
+	var (
+		path   = "/api/v1/pay/refund/do/"
+		method = http.MethodPost
+		values = map[string]interface{}{
+			"ori_trade_no":    oriTradeNo,
+			"refund_trade_no": refundTradeNo,
+			"refund_rate":     refundRate,
+			"scene":           scene,
+			"desc":            desc,
+			"device":          device,
+		}
+		headers = http.Header{}
+	)
+	r = new(RefundResponse)
+	hResp, err = d.addAndDoRequest(ctx, r, method, path, values, headers)
+	return
+}
+
 func (d *OAuthV1) openDoApp2UserByOpenIdOrDragonExUid(ctx context.Context, openId, tradeNo, coinCode, volume, scene, desc, device string, dragonExUid int64) (r *DoApp2UserResponse, hResp *http.Response, err error) {
 	var (
 		path   = "/api/v1/open/pay/app2user/do/"
