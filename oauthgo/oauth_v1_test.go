@@ -129,7 +129,7 @@ func TestOAuthV1_Refund(t *testing.T) {
 		refundTradeNo = ""
 		refundRate    = "1"
 	)
-	resp, _, err := apiV1.Refund(context.Background(), oriTradeNo, refundTradeNo, refundRate, scene, desc, device)
+	resp, _, err := apiV1.rReturn(context.Background(), oriTradeNo, refundTradeNo, refundRate, scene, desc, device)
 
 	assert.Equal(t, nil, err)
 	assert.Equal(t, true, resp.Ok)
