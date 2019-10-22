@@ -1,0 +1,45 @@
+
+@startuml DragonEx Open Platform - Open Account Payment Process
+
+actor user as user #White
+participant DragonExBrowser as dragonexBrowser
+participant AppBrowser as appBrowser
+participant AppServer as appServer #Pink
+participant DragonExServer as dragonexServer #aqua
+
+' Login Process
+autonumber 1 1
+note right of user: Login&&Get PayToken
+user -[#Gray]> dragonexBrowser: agree login authorization 
+dragonexBrowser -[#Gray]> dragonexServer: login authorization request
+dragonexServer -[#Gray]> dragonexBrowser: return login AccessCode
+dragonexBrowser -[#Gray]> appBrowser: jump to accessing party page 
+appBrowser -[#Gray]> appServer: carry AccessCode request
+appServer -[#Gray]> dragonexServer: Login request 
+dragonexServer -[#Gray]> appServer: authorized login，return AccessToken、PayToken,etc
+appServer -[#Gray]-> appServer: save information like PayToken，and will use related info in future payment 
+appServer -[#Gray]> appBrowser: authorized login success
+autonumber stop
+
+|||
+
+' user -> app
+autonumber 1 1
+note right of appServer: user transfer to App server：Deposit
+appServer -[#Blue]> dragonexServer: call`/api/v1/open/pay/user2app/do/`\n require PayTOken
+dragonexServer -[#Blue]> appServer: payment result
+dragonexServer -[#Blue]-> appServer: Asynchronous payment callbacks：\n callback success if received 200 HTTP status，\n it will retry periodically within 35 hours if callback fail 
+autonumber stop
+
+|||
+|||
+
+' app -> user
+autonumber 1 1
+note right of appServer: App server transfer to the user：Withdraw 
+appServer -[#OrangeRed]> dragonexServer: call`/api/v1/open/pay/app2user/do/`
+dragonexServer -[#OrangeRed]> appServer: payment result
+dragonexServer -[#OrangeRed]-> appServer: Asynchronous payment callbacks：\n callback success if received 200 HTTP status，\n it will retry periodically within 35 hours if callback fail 
+autonumber stop
+
+@enduml

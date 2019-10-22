@@ -1,0 +1,29 @@
+@startuml DragonEx Open Platform - Login Authentication Process 
+
+actor user as user #White
+participant DragonExBrowser as dragonexBrowser
+participant AppBrowser as appBrowser
+participant AppServer as appServer #Pink
+participant DragonExServer as dragonexServer #aqua
+
+autonumber 1 1
+user -> appBrowser: Users click APP entranace\n（Carry different fileds, such as domain and lang，\n check Login API doc for more details ）
+appBrowser -> dragonexBrowser: accessing party The access party determines whether authorization is required，\n if needed，jump to DragonEx authentication page\n(https://{domain}/oauth/login/\n?app_id={yourappid}\n&scopes={authentication to login token}\n&state={random character string}\n&device={login device}\n&redirect_url= {the address after successful login})
+dragonexBrowser -> user: request authorization from user 
+user -> dragonexBrowser: user allows the authorization（if not allow，DragonEx shall handle further operation）
+dragonexBrowser -> dragonexServer: AccessCode request
+dragonexServer -> dragonexBrowser: return AccessCode\n（If AccessCode request fail，\nDragonEx shall handle further opertaion）
+note over of dragonexBrowser: the process above could handle by using DragonEx browser\n User can log in through DragonEx open platform only
+autonumber stop
+
+autonumber 1 1
+dragonexBrowser -> appBrowser: Carry AccessCode and other information\n jump to the redirect_url provided above
+appBrowser -> appServer: will get information like AccessCode\n sent to APPserver 
+appServer -> dragonexServer:  use AcccessCode to login \n（https://oauth.dragonex.io/api/v1/login/do/）
+dragonexServer -> appServer: return the result of login：\n if sucess，return login Token；\n if success，return corresponding error code
+appServer --> appServer: handle by oneself if needed
+appServer -> appBrowser: return the result of login and other information
+appBrowser -> dragonexServer: if login success, allow AccessToken to visit DragonEx authorized resources 
+autonumber stop
+
+@enduml

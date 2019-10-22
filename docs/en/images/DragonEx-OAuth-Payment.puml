@@ -1,0 +1,51 @@
+Open Platform 
+
+@startuml DragonEx Open Platform - Exchange Payment Process
+
+actor user as user #White
+participant DragonExBrowser as dragonexBrowser
+participant AppBrowser as appBrowser
+participant AppServer as appServer #Pink
+participant DragonExServer as dragonexServer #aqua
+
+autonumber 1 1
+appBrowser -> appServer: payment request
+appServer --> appServer: perfrom the required processing，Ex. Create orders
+appServer -> dragonexServer: payment request\n（https://oauth.dragonex.io/api/v1/user2app/pre/\n?app_id={yourappid}\n&trade_no={payment number，unique}\n&coin_code={currency}\n&volume={volume}\n&scene={payment scenarios}\n&desc={detailed description}\n&device={device}\n&state={random and unpredictable string}\n&domain={user’s login domain}\n&specify_dragonex_uid={designate user that need to pay，If is not 0，then allow the user pay only}\n&redirect_url={the address after the payment success}）
+
+dragonexServer -> dragonexServer: Authentication
+dragonexServer -> appServer: return the result of the application：\n if success，return payment address；\n if fails，return error
+appServer -> appBrowser: return the result of the application
+
+appBrowser -[#Gray]-> appBrowser: if payment failed，the access party shall handle by itself
+autonumber stop
+
+autonumber 7 1
+appBrowser -> dragonexBrowser: if success：jump to the return payment address 
+dragonexBrowser -> user: Ask if the user agrees to pay 
+
+user -[#Gray]-> dragonexBrowser: user disagree to pay
+dragonexBrowser -[#Gray]-> appBrowser: jump to the redirect_url provided above，\n with order number and status=-1parameter
+appBrowser -[#Gray]-> appBrowser: the access party shall handle further operation by itself
+autonumber stop
+
+autonumber 9 1
+user -> dragonexBrowser: user agree to pay 
+dragonexBrowser -> dragonexServer: payment request
+dragonexServer --> dragonexServer: authentication, payment, etc.
+dragonexServer -> dragonexBrowser:return the result of payment：\n if success，return order information；\n if fails，return error code
+dragonexServer --> appServer: if payment success ，Asynchronous payment callback（Note，callback only if it success）
+
+dragonexBrowser -> appBrowser: carry the result of the payment（success or fail），jump  to the redirect_url prvovided above
+appBrowser --> appBrowser: the accessing party shall handle further operation by itself
+appBrowser --> appServer: the accessing party shall handle further operation by itself
+autonumber stop
+
+@enduml
+
+
+
+
+
+
+
