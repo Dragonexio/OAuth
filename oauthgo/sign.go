@@ -44,11 +44,10 @@ func sign(method, path string, header http.Header, secretKey string) (sign strin
 	stringToSign += path
 
 	sha1Hash := hmac.New(sha1.New, []byte(secretKey))
-	if _, e := sha1Hash.Write([]byte(stringToSign)); e != nil {
+	if _, err = sha1Hash.Write([]byte(stringToSign)); err != nil {
 		return
 	}
 
 	sign = base64.StdEncoding.EncodeToString(sha1Hash.Sum(nil))
-
 	return
 }

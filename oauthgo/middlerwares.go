@@ -26,8 +26,7 @@ func CheckResponseMiddleware(ctx context.Context, oauth OAuth, req *http.Request
 	resp.Body = ioutil.NopCloser(bytes.NewBuffer(respBodyByte))
 	strToSign := fmt.Sprintf("%s%s%s", string(respBodyByte), dragonExTs, oauth.GetSignKey())
 	h := md5.New()
-	_, err = io.WriteString(h, strToSign)
-	if err != nil {
+	if _, err = io.WriteString(h, strToSign); err != nil {
 		return err
 	}
 
@@ -35,6 +34,5 @@ func CheckResponseMiddleware(ctx context.Context, oauth OAuth, req *http.Request
 	if sign[:8] != dragonExSign {
 		return ErrDifferentResponseSign
 	}
-
 	return err
 }

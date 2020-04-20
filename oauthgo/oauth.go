@@ -115,8 +115,7 @@ func (oauth *DefaultOAuth) NewRequest(method, path string, values map[string]int
 func (oauth *DefaultOAuth) Do(ctx context.Context, req *http.Request, i interface{}) (hResp *http.Response, err error) {
 	var reqBodyByte []byte
 	if req.Body != nil {
-		reqBodyByte, err = ioutil.ReadAll(req.Body)
-		if err != nil {
+		if reqBodyByte, err = ioutil.ReadAll(req.Body); err != nil {
 			return hResp, err
 		}
 	}
@@ -124,27 +123,24 @@ func (oauth *DefaultOAuth) Do(ctx context.Context, req *http.Request, i interfac
 
 	// do something before doing request
 	for _, handler := range oauth.beforeHandlers {
-		err = handler(ctx, oauth, req)
-		if err != nil {
+		if err = handler(ctx, oauth, req); err != nil {
 			return hResp, err
 		}
 	}
 
 	// do request
 	client := http.Client{}
-	hResp, err = client.Do(req)
-	req.Body = ioutil.NopCloser(bytes.NewBuffer(reqBodyByte))
-	if err != nil {
+	if hResp, err = client.Do(req); err != nil {
 		return hResp, err
 	}
 	defer func() {
 		_ = hResp.Body.Close()
 	}()
+	req.Body = ioutil.NopCloser(bytes.NewBuffer(reqBodyByte))
 
 	// do something after doing request
 	for _, handler := range oauth.afterHandlers {
-		err = handler(ctx, oauth, req, hResp)
-		if err != nil {
+		if err = handler(ctx, oauth, req, hResp); err != nil {
 			return hResp, err
 		}
 	}
@@ -159,11 +155,9 @@ func (oauth *DefaultOAuth) Do(ctx context.Context, req *http.Request, i interfac
 	}
 	hResp.Body = ioutil.NopCloser(bytes.NewBuffer(body))
 
-	err = json.Unmarshal(body, i)
-	if err != nil {
+	if err = json.Unmarshal(body, i); err != nil {
 		return hResp, err
 	}
-
 	return
 }
 
@@ -196,8 +190,7 @@ func (oauth *DefaultOAuth) makeGetRequest(path string, values map[string]interfa
 	}
 
 	reqUrl := fmt.Sprintf("%s%s?%s", oauth.host, path, strings.Join(valuesStringSlice, "&"))
-	req, err = http.NewRequest(method, reqUrl, nil)
-	if err != nil {
+	if req, err = http.NewRequest(method, reqUrl, nil); err != nil {
 		return req, err
 	}
 
@@ -220,8 +213,7 @@ func (oauth *DefaultOAuth) makePostRequest(path string, values map[string]interf
 		return req, err
 	}
 
-	req, err = http.NewRequest(method, reqUrl, strings.NewReader(string(bodyByte)))
-	if err != nil {
+	if req, err = http.NewRequest(method, reqUrl, strings.NewReader(string(bodyByte))); err != nil {
 		return req, err
 	}
 
@@ -248,6 +240,6 @@ type BaseResponse struct {
 	Msg  string `json:"msg"`
 }
 
-func (r *BaseResponse) IsOk() bool {
+func (r BaseResponse) IsOk() bool {
 	return r.Code == CodeOk
 }

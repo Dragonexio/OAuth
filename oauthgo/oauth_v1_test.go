@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"testing"
 	"time"
 
@@ -19,7 +20,7 @@ var (
 func TestMain(m *testing.M) {
 	const (
 		appId     = "appidfortest"
-		host      = "https://oauth.dragonex.io"
+		host      = "https://oauth.dragonex.co"
 		accessKey = "6b7ef684a6645325ae1505d5636cfb12"
 		secretKey = "2721a56546de5baf9cfc4b5ceb3cc59f"
 		signKey   = "testKey"
@@ -30,7 +31,7 @@ func TestMain(m *testing.M) {
 	apiV1.After(displayRequestAndResponseMiddleware)
 	apiV1.After(CheckResponseMiddleware)
 
-	m.Run()
+	os.Exit(m.Run())
 }
 
 const (
@@ -128,8 +129,9 @@ func TestOAuthV1_Refund(t *testing.T) {
 		oriTradeNo    = ""
 		refundTradeNo = ""
 		refundRate    = "1"
+		refundVolume  = "10"
 	)
-	resp, _, err := apiV1.rReturn(context.Background(), oriTradeNo, refundTradeNo, refundRate, scene, desc, device)
+	resp, _, err := apiV1.rReturn(context.Background(), oriTradeNo, refundTradeNo, refundRate, refundVolume, scene, desc, device)
 
 	assert.Equal(t, nil, err)
 	assert.Equal(t, true, resp.Ok)
